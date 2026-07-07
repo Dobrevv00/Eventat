@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-noto: var(--font-noto);
+  --font-jakarta: var(--font-jakarta);
+}
+
+@theme {
+  --font-serif: Constantia, "Palatino Linotype", Georgia, serif;
+  --color-ink: #2a2340;
+  --color-muted: #6f6a82;
+  --color-plum: #664d92;
+  --color-violet: #7f64ae;
+  --color-lilac: #9b85bf;
+  --color-blush: #ebbfdb;
+  --color-line: #ece7f1;
+}
+
+body {
+  background: #ffffff;
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+}
