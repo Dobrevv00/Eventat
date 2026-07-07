@@ -29,18 +29,18 @@ const STEPS = [
 
 export default function Process() {
   return (
-    <section className="mt-[64px] bg-[#fbf6fa] pt-[56px] pb-[56px] lg:mt-[88px] lg:h-[440px] lg:pb-0">
+    <section className="mt-[64px] bg-[#fbf6fa] pt-[56px] pb-[56px] lg:mt-[88px] xl:h-[440px] xl:pb-0">
       <SectionHeading
         eyebrow="ЛЕСЕН ПРОЦЕС"
         title="От идея до празнуване"
         subtitle="Четири стъпки между теб и перфектно организираното събитие."
       />
-      <div className="mx-auto mt-[45px] flex max-w-[420px] flex-col gap-[40px] px-[24px] lg:relative lg:block lg:h-[186px] lg:w-[1158px] lg:max-w-none lg:px-0">
-        <div className="absolute left-[136px] top-[38px] hidden h-[2px] w-[860px] bg-lilac opacity-50 lg:block" />
+      <div className="mx-auto mt-[45px] flex max-w-[420px] flex-col gap-[40px] px-[24px] xl:relative xl:block xl:h-[186px] xl:w-[1158px] xl:max-w-none xl:px-0">
+        <div className="absolute left-[136px] top-[38px] hidden h-[2px] w-[860px] bg-lilac opacity-50 xl:block" />
         {STEPS.map((step, i) => (
           <div
             key={step.number}
-            className="flex flex-col items-center lg:absolute lg:top-[8px] lg:w-[291px]"
+            className="flex flex-col items-center xl:absolute xl:top-[8px] xl:w-[291px]"
             style={{ left: i * 291 - 16 }}
           >
             <div className="flex size-[56px] items-center justify-center rounded-full border-2 border-lilac bg-white">

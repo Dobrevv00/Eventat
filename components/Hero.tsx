@@ -69,11 +69,17 @@ export default function Hero() {
           </div>
         </div>
         <div className="flex w-full max-w-[420px] flex-col items-center gap-[14px] lg:hidden">
-          <img alt="EventAT" src="/images/hero-swash-3.svg" className="w-full" />
+          <img
+            alt="EventAT"
+            src="/images/hero-swash-3.svg"
+            className="w-full"
+            style={{ aspectRatio: "559 / 82" }}
+          />
           <img
             alt="Plan your event"
             src="/images/hero-swash-4.svg"
             className="w-[99%]"
+            style={{ aspectRatio: "553 / 35" }}
           />
         </div>
 
