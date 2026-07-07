@@ -13,7 +13,7 @@ export default function Hero() {
         <img
           alt=""
           src="/images/hero-bg.jpg"
-          className="absolute left-[-13.2%] top-[-1.4%] h-[124%] w-[126.4%] max-w-none"
+          className="absolute left-0 top-0 size-full max-w-none object-cover lg:left-[-13.2%] lg:top-[-1.4%] lg:h-[124%] lg:w-[126.4%]"
         />
       </div>
       <div
