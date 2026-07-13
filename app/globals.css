@@ -16,6 +16,10 @@
   --color-line: #ece7f1;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: #ffffff;
   color: var(--color-ink);

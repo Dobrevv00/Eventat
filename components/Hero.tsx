@@ -107,13 +107,13 @@ export default function Hero() {
 
         <div className="mt-[32px] flex w-full flex-col items-center gap-[12px] sm:w-auto sm:flex-row lg:mt-[52px]">
           <a
-            href="#"
+            href="#form-plan"
             className="flex h-[53px] w-full max-w-[320px] items-center justify-center rounded-[12px] bg-violet text-[15px] font-bold italic text-white transition-colors hover:bg-plum sm:w-[189px]"
           >
             Планирам събитие
           </a>
           <a
-            href="#"
+            href="#form-offer"
             className="flex h-[53px] w-full max-w-[320px] items-center justify-center rounded-[12px] bg-white text-[15px] font-bold italic text-plum transition-colors hover:bg-[#f3edf8] sm:w-[179px]"
           >
             Предлагам услуги
