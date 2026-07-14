@@ -416,7 +416,7 @@ export default function JoinCta() {
 
   const groupError = (def: CheckboxGroupDef): string | null => {
     const selected = selections[def.key] ?? [];
-    if (selected.length < def.min) return "Избери поне 1 опция";
+    if (selected.length < def.min) return "Изберете поне една опция";
     if (
       def.customOption &&
       selected.includes(OTHER_VALUE) &&
