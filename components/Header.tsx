@@ -71,7 +71,7 @@ export default function Header() {
             aria-label="Меню"
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((open) => !open)}
-            className="size-[32px] rounded-[8.4px] text-center font-sans text-[16.8px] text-plum transition-colors hover:bg-[#f4eff5]"
+            className="size-[32px] rounded-[8.4px] text-center font-sans text-[16.8px] text-plum transition-colors hover:bg-[#f4eff5] lg:hidden"
           >
             ☰
           </button>
