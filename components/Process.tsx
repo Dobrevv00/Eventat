@@ -29,7 +29,10 @@ const STEPS = [
 
 export default function Process() {
   return (
-    <section className="mt-[64px] bg-[#fbf6fa] pt-[56px] pb-[56px] lg:mt-[88px] xl:h-[440px] xl:pb-0">
+    <section
+      id="kak-raboti"
+      className="mt-[64px] bg-[#fbf6fa] pt-[56px] pb-[56px] lg:mt-[88px] xl:h-[440px] xl:pb-0"
+    >
       <SectionHeading
         eyebrow="ЛЕСЕН ПРОЦЕС"
         title="От идея до празнуване"

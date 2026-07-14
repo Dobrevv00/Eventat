@@ -35,7 +35,10 @@ const SERVICES = [
 
 export default function Services() {
   return (
-    <section className="mx-auto mt-[56px] w-full max-w-[1132px] px-[24px] lg:px-0">
+    <section
+      id="uslugi"
+      className="mx-auto mt-[56px] w-full max-w-[1132px] scroll-mt-[24px] px-[24px] lg:px-0"
+    >
       <SectionHeading
         eyebrow="УСЛУГИ"
         title="За всеки специален момент"

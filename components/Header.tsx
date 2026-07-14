@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ensureAnchorScroll } from "@/lib/scrollToAnchor";
 
 function Logo() {
   return (
@@ -18,12 +19,20 @@ function Logo() {
 export { Logo };
 
 const NAV_ITEMS = [
-  "Как работи",
-  "Услуги",
-  "Поводи",
-  "За изпълнители",
-  "Контакти",
+  { label: "Как работи", href: "/#kak-raboti" },
+  { label: "Услуги", href: "/#uslugi" },
+  { label: "Поводи", href: "/#uslugi" },
+  { label: "За изпълнители", href: "#" },
+  { label: "Контакти", href: "/kontakti" },
 ];
+
+function handleNavClick(href: string) {
+  const hash = href.split("#")[1];
+  // Only assist same-page anchor scrolls; cross-page links navigate normally.
+  if (hash && document.getElementById(hash)) {
+    ensureAnchorScroll(hash);
+  }
+}
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -35,11 +44,12 @@ export default function Header() {
         <nav className="hidden items-center gap-[30px] text-[14px] text-ink lg:flex">
           {NAV_ITEMS.map((item) => (
             <a
-              key={item}
-              href="#"
+              key={item.label}
+              href={item.href}
+              onClick={() => handleNavClick(item.href)}
               className="relative whitespace-nowrap py-[4px] transition-colors after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:rounded-full after:bg-violet after:transition-all after:duration-300 hover:text-plum hover:after:w-full"
             >
-              {item}
+              {item.label}
             </a>
           ))}
         </nav>
@@ -51,7 +61,8 @@ export default function Header() {
             ♡
           </button>
           <a
-            href="#"
+            href="/#form-offer"
+            onClick={() => handleNavClick("/#form-offer")}
             className="hidden h-[40px] items-center justify-center rounded-[10px] bg-violet px-[19px] font-jakarta text-[11.77px] font-semibold text-white drop-shadow-[0px_5px_7.6px_rgba(127,100,174,0.35)] transition-colors hover:bg-plum sm:flex"
           >
             Добави услуга
@@ -70,16 +81,23 @@ export default function Header() {
         <nav className="flex flex-col border-t border-line bg-white px-[24px] py-[10px] lg:hidden">
           {NAV_ITEMS.map((item) => (
             <a
-              key={item}
-              href="#"
-              onClick={() => setMenuOpen(false)}
+              key={item.label}
+              href={item.href}
+              onClick={() => {
+                setMenuOpen(false);
+                handleNavClick(item.href);
+              }}
               className="rounded-[8px] px-[10px] py-[10px] text-[15px] text-ink transition-colors hover:bg-[#f4eff5] hover:text-plum"
             >
-              {item}
+              {item.label}
             </a>
           ))}
           <a
-            href="#"
+            href="/#form-offer"
+            onClick={() => {
+              setMenuOpen(false);
+              handleNavClick("/#form-offer");
+            }}
             className="mt-[6px] mb-[8px] flex h-[44px] items-center justify-center rounded-[10px] bg-violet font-jakarta text-[13px] font-semibold text-white transition-colors hover:bg-plum sm:hidden"
           >
             Добави услуга

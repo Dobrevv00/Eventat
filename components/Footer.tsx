@@ -1,6 +1,10 @@
 import { Logo } from "./Header";
 
-const LINKS = ["Поверителност", "Условия", "Контакти"];
+const LINKS = [
+  { label: "Поверителност", href: "#" },
+  { label: "Условия", href: "#" },
+  { label: "Контакти", href: "/kontakti" },
+];
 
 export default function Footer() {
   return (
@@ -9,8 +13,12 @@ export default function Footer() {
         <Logo />
         <nav className="flex items-center gap-[32px] text-[14px] leading-[21.7px] text-muted lg:pt-[12px]">
           {LINKS.map((link) => (
-            <a key={link} href="#" className="transition-colors hover:text-plum">
-              {link}
+            <a
+              key={link.label}
+              href={link.href}
+              className="transition-colors hover:text-plum"
+            >
+              {link.label}
             </a>
           ))}
         </nav>
