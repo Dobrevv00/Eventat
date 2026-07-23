@@ -22,7 +22,7 @@ const NAV_ITEMS = [
   { label: "Как работи", href: "/#kak-raboti" },
   { label: "Услуги", href: "/#uslugi" },
   { label: "Поводи", href: "/#uslugi" },
-  { label: "За изпълнители", href: "#" },
+  { label: "За изпълнители", href: "/#form-offer" },
   { label: "Контакти", href: "/kontakti" },
 ];
 
