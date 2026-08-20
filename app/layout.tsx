@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import CookieConsent from "@/components/CookieConsent";
 
 const notoSans = Noto_Sans({
   variable: "--font-noto",
@@ -54,7 +55,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="bg" className={`${notoSans.variable} ${jakarta.variable}`}>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        {children}
+        <CookieConsent />
+      </body>
     </html>
   );
 }
