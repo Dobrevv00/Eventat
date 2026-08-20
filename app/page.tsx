@@ -10,7 +10,7 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <main className="overflow-x-hidden bg-white">
+    <main className="overflow-x-clip bg-white">
       <AnchorAssist />
       <Header />
       <Hero />

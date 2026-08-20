@@ -31,7 +31,7 @@ export default function Process() {
   return (
     <section
       id="kak-raboti"
-      className="mt-[64px] bg-[#fbf6fa] pt-[56px] pb-[56px] lg:mt-[88px] xl:h-[440px] xl:pb-0"
+      className="mt-[64px] scroll-mt-[70px] bg-[#fbf6fa] pt-[56px] pb-[56px] lg:mt-[88px] xl:h-[440px] xl:pb-0"
     >
       <SectionHeading
         eyebrow="ЛЕСЕН ПРОЦЕС"

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function KontaktiPage() {
   return (
-    <main className="flex min-h-screen flex-col overflow-x-hidden bg-white">
+    <main className="flex min-h-screen flex-col overflow-x-clip bg-white">
       <Header />
       <div className="flex-1">
         <ContactSection />

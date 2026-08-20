@@ -35,7 +35,7 @@ export default async function ServicePage({ params }: PageProps) {
   }
 
   return (
-    <main className="flex min-h-screen flex-col overflow-x-hidden bg-white">
+    <main className="flex min-h-screen flex-col overflow-x-clip bg-white">
       <Header />
 
       {/* Hero */}

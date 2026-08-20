@@ -38,7 +38,7 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="border-b border-line bg-white">
+    <header className="sticky top-0 z-50 border-b border-line bg-white/70 backdrop-blur-md backdrop-saturate-150">
       <div className="mx-auto flex h-[68px] w-full max-w-[1210px] items-center justify-between px-[20px]">
         <Logo />
         <nav className="hidden items-center gap-[30px] text-[14px] text-ink lg:flex">
