@@ -31,6 +31,40 @@ export function readConsent(): StoredConsent | null {
   }
 }
 
+/**
+ * Google Consent Mode v2 — без това извикване Google не вижда избора на
+ * посетителя и таговете остават постоянно "denied".
+ * Маркетинговото съгласие управлява ad_storage / ad_user_data /
+ * ad_personalization, аналитичното — analytics_storage.
+ */
+function updateGoogleConsent(consent: StoredConsent) {
+  if (typeof window === "undefined") return;
+  window.dataLayer = window.dataLayer || [];
+
+  if (typeof window.gtag !== "function") {
+    // Резервен вариант, ако инлайн скриптът в layout-а не се е изпълнил.
+    window.gtag = function gtagFallback() {
+      // eslint-disable-next-line prefer-rest-params
+      window.dataLayer!.push(arguments);
+    };
+  }
+
+  const state = (allowed: boolean) => (allowed ? "granted" : "denied");
+  window.gtag("consent", "update", {
+    ad_storage: state(consent.marketing),
+    ad_user_data: state(consent.marketing),
+    ad_personalization: state(consent.marketing),
+    analytics_storage: state(consent.analytics),
+  });
+
+  // Допълнително събитие, ако контейнерът иска да реагира на промяна.
+  window.dataLayer.push({
+    event: "cookie_consent_update",
+    analytics_consent: consent.analytics,
+    marketing_consent: consent.marketing,
+  });
+}
+
 export function saveConsent(choice: {
   analytics: boolean;
   marketing: boolean;
@@ -42,6 +76,7 @@ export function saveConsent(choice: {
     timestamp: new Date().toISOString(),
   };
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(value));
+  updateGoogleConsent(value);
   window.dispatchEvent(
     new CustomEvent(CONSENT_UPDATED_EVENT, { detail: value }),
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { pushEvent } from "@/lib/analytics";
 
 const ERROR_COLOR = "#c0455e";
 const EMAIL_PATTERN = /^\S+@\S+\.\S+$/;
@@ -49,7 +50,15 @@ export default function ContactSection() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitAttempted(true);
-    if (isValid) setSent(true);
+    if (!isValid) return;
+
+    // GTM: тригер "CE - contact_form_submit" (контейнер GTM-5RDG9GVR).
+    pushEvent({
+      event: "contact_form_submit",
+      form_id: "contact",
+    });
+
+    setSent(true);
   };
 
   const shownNameError = showError("name", nameError);

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { joinSelections, pushEvent } from "@/lib/analytics";
 
 const SPARKLES = [
   { left: 317, top: 144, size: 13, opacity: 0.62 },
@@ -360,6 +361,7 @@ export default function JoinCta() {
   const [website, setWebsite] = useState("");
   const [optIn, setOptIn] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const activeGroups =
     activeTab === "plan" ? PLAN_CHECKBOX_GROUPS : OFFER_CHECKBOX_GROUPS;
@@ -439,9 +441,39 @@ export default function JoinCta() {
   const showError = (key: string, error: string | null) =>
     error && (touched[key] || submitAttempted) ? error : null;
 
+  // Заменя стойността "Друго" с текста, който потребителят е написал.
+  const resolveSelection = (key: string) => {
+    const def = [...PLAN_CHECKBOX_GROUPS, ...OFFER_CHECKBOX_GROUPS].find(
+      (d) => d.key === key,
+    );
+    return (selections[key] ?? []).map((value) =>
+      value === OTHER_VALUE
+        ? (customTexts[key] || "").trim() || def?.customOption || "Друго"
+        : value,
+    );
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitAttempted(true);
+    if (!isValid) return;
+
+    // GTM: тригер "CE - generate_lead" (контейнер GTM-5RDG9GVR).
+    pushEvent({
+      event: "generate_lead",
+      form_id: "waitlist",
+      form_side: activeTab, // "plan" = клиент, "offer" = изпълнител
+      event_type: joinSelections(resolveSelection("event")),
+      first_service: joinSelections(
+        resolveSelection(activeTab === "plan" ? "service" : "offerServices"),
+      ),
+      discovery_source: joinSelections(
+        resolveSelection(activeTab === "plan" ? "source" : "offerDiscovery"),
+      ),
+      pain_points: joinSelections(resolveSelection("challenge")),
+    });
+
+    setSubmitted(true);
   };
 
   const shownNameError = showError("name", nameError);
@@ -537,6 +569,18 @@ export default function JoinCta() {
               Резервирай своето място
             </h3>
 
+            {submitted ? (
+              <div className="flex min-h-[320px] flex-col items-center justify-center text-center lg:min-h-[600px]">
+                <span className="text-[28px] text-blush">✦</span>
+                <h4 className="mt-[10px] text-[22px] font-bold italic text-ink">
+                  Ти си в листата!
+                </h4>
+                <p className="mt-[8px] max-w-[360px] text-[14px] leading-[21px] text-muted">
+                  Благодарим ти! Ще те уведомим първи, когато EventAT стартира.
+                </p>
+              </div>
+            ) : (
+              <>
             <div className="mt-[15px] flex rounded-[12px] bg-[#f4eff5] p-[4px]" role="tablist">
               <button
                 type="button"
@@ -655,6 +699,8 @@ export default function JoinCta() {
             <p className="mt-[10px] text-center text-[12px] leading-[18.6px] text-muted">
               Никога няма да изпратим спам. Само новина за старта.
             </p>
+              </>
+            )}
           </form>
         </div>
       </div>
