@@ -148,8 +148,15 @@ export default function PoveritelnostPage() {
           <Paragraph>
             Използваме бисквитки, за да работи сайтът правилно и, с твое
             съгласие, за анализ и маркетинг. Разделяме ги на три категории:
-            необходими (винаги активни), аналитични и маркетингови. Можеш да
-            промениш избора си по всяко време.
+            необходими (винаги активни), аналитични и маркетингови. Подробности
+            ще намериш в{" "}
+            <a
+              href="/politika-biskvitki"
+              className="text-plum underline transition-colors hover:text-violet"
+            >
+              Политиката за бисквитки
+            </a>
+            . Можеш да промениш избора си по всяко време.
           </Paragraph>
           <div className="mt-[16px]">
             <CookieSettingsButton className="inline-flex h-[46px] items-center justify-center rounded-[12px] bg-violet px-[22px] text-[14px] font-bold italic text-white drop-shadow-[0px_6px_9px_rgba(127,100,174,0.35)] transition-colors hover:bg-plum">

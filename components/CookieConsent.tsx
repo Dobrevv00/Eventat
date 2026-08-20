@@ -131,10 +131,10 @@ export default function CookieConsent() {
                   твоето изживяване. Можеш да приемеш всички или сам да избереш
                   кои да позволиш. Виж{" "}
                   <a
-                    href="/poveritelnost"
+                    href="/politika-biskvitki"
                     className="text-plum underline transition-colors hover:text-violet"
                   >
-                    Политиката за поверителност
+                    Политиката за бисквитки
                   </a>
                   .
                 </p>

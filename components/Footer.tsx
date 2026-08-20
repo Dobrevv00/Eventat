@@ -3,6 +3,7 @@ import CookieSettingsButton from "./CookieSettingsButton";
 
 const LINKS = [
   { label: "Поверителност", href: "/poveritelnost" },
+  { label: "Бисквитки", href: "/politika-biskvitki" },
   { label: "Условия", href: "#" },
   { label: "Контакти", href: "/kontakti" },
 ];
