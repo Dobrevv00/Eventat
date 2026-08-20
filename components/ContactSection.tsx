@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { submitContact } from "@/app/(frontend)/actions/submitContact";
 import { pushEvent } from "@/lib/analytics";
 
 const ERROR_COLOR = "#c0455e";
@@ -31,6 +32,10 @@ export default function ContactSection() {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [sent, setSent] = useState(false);
+  // Скрито поле за ботове — реалните потребители го оставят празно.
+  const [company, setCompany] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const nameError = name.trim() ? null : "Моля, въведи името си";
   const emailError = email.trim()
@@ -47,18 +52,42 @@ export default function ContactSection() {
   const markTouched = (key: string) =>
     setTouched((current) => ({ ...current, [key]: true }));
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitAttempted(true);
-    if (!isValid) return;
+    if (!isValid || isSubmitting) return;
 
-    // GTM: тригер "CE - contact_form_submit" (контейнер GTM-5RDG9GVR).
-    pushEvent({
-      event: "contact_form_submit",
-      form_id: "contact",
-    });
+    setIsSubmitting(true);
+    setSubmitError(null);
 
-    setSent(true);
+    try {
+      const result = await submitContact({
+        name,
+        email,
+        message,
+        honeypot: company,
+      });
+
+      if (!result.ok) {
+        setSubmitError(result.error);
+        return;
+      }
+
+      // GTM събитието тръгва само след успешен запис.
+      // Тригер "CE - contact_form_submit" (контейнер GTM-5RDG9GVR).
+      pushEvent({
+        event: "contact_form_submit",
+        form_id: "contact",
+      });
+
+      setSent(true);
+    } catch {
+      setSubmitError(
+        "Съобщението не можа да бъде изпратено. Моля, опитай отново.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const shownNameError = showError("name", nameError);
@@ -127,6 +156,24 @@ export default function ContactSection() {
               </div>
             ) : (
               <>
+                {/*
+                  Honeypot: скрито за хора (visually-hidden, извън tab flow и
+                  скрито за екранни четци), но видимо за автоматични ботове.
+                  Ако бъде попълнено, записът се отхвърля тихо.
+                */}
+                <div className="sr-only" aria-hidden="true">
+                  <label htmlFor="contact-company">Фирма</label>
+                  <input
+                    id="contact-company"
+                    name="company"
+                    type="text"
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
+                </div>
+
                 <div className="flex flex-col gap-[12px] sm:flex-row">
                   <div className="flex-1">
                     <label className="block">
@@ -181,12 +228,16 @@ export default function ContactSection() {
 
                 <button
                   type="submit"
-                  aria-disabled={!isValid}
+                  disabled={isSubmitting}
+                  aria-disabled={!isValid || isSubmitting}
+                  aria-busy={isSubmitting}
                   className={`mt-[24px] h-[47px] w-full rounded-[12px] bg-violet text-[16px] font-bold italic text-white drop-shadow-[0px_6px_9px_rgba(127,100,174,0.35)] transition-all ${
-                    isValid ? "hover:bg-plum" : "cursor-not-allowed opacity-45"
+                    isValid && !isSubmitting
+                      ? "hover:bg-plum"
+                      : "cursor-not-allowed opacity-45"
                   }`}
                 >
-                  Изпрати съобщение
+                  {isSubmitting ? "Изпращане…" : "Изпрати съобщение"}
                 </button>
                 {!isValid && submitAttempted && (
                   <p
@@ -194,6 +245,15 @@ export default function ContactSection() {
                     style={{ color: ERROR_COLOR }}
                   >
                     Моля, попълни оцветените в червено полета.
+                  </p>
+                )}
+                {submitError && (
+                  <p
+                    role="alert"
+                    className="mt-[8px] text-center text-[12px] leading-[16px]"
+                    style={{ color: ERROR_COLOR }}
+                  >
+                    {submitError}
                   </p>
                 )}
               </>
