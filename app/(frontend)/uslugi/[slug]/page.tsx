@@ -2,33 +2,45 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { SERVICES, getService } from "@/lib/services";
+import {
+  getFooterContent,
+  getHeaderContent,
+  getServiceBySlug,
+  getServices,
+  getServicesPageContent,
+} from "@/lib/content";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
-  return SERVICES.map((service) => ({ slug: service.slug }));
+export async function generateStaticParams() {
+  const services = await getServices();
+  return services.map((service) => ({ slug: service.slug }));
 }
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const service = getService(slug);
+  const service = await getServiceBySlug(slug);
   if (!service) {
     return { title: "Услугата не е намерена — EventAT" };
   }
   return {
-    title: `${service.title} — EventAT`,
-    description: service.intro,
+    title: service.seoTitle || `${service.title} — EventAT`,
+    description: service.seoDescription || service.intro,
   };
 }
 
 export default async function ServicePage({ params }: PageProps) {
   const { slug } = await params;
-  const service = getService(slug);
+  const [service, header, footer, page] = await Promise.all([
+    getServiceBySlug(slug),
+    getHeaderContent(),
+    getFooterContent(),
+    getServicesPageContent(),
+  ]);
 
   if (!service) {
     notFound();
@@ -36,7 +48,7 @@ export default async function ServicePage({ params }: PageProps) {
 
   return (
     <main className="flex min-h-screen flex-col overflow-x-clip bg-white">
-      <Header />
+      <Header content={header} />
 
       {/* Hero */}
       <section
@@ -48,8 +60,11 @@ export default async function ServicePage({ params }: PageProps) {
       >
         <div className="mx-auto w-full max-w-[1132px] px-[24px] pt-[40px] pb-[48px]">
           <nav className="text-[13px] leading-[20px] text-muted">
-            <a href="/#uslugi" className="transition-colors hover:text-plum">
-              Услуги
+            <a
+              href={page.secondaryCtaHref}
+              className="transition-colors hover:text-plum"
+            >
+              {page.breadcrumbLabel}
             </a>
             <span className="mx-[8px] text-lilac">/</span>
             <span className="text-ink">{service.title}</span>
@@ -58,29 +73,29 @@ export default async function ServicePage({ params }: PageProps) {
           <div className="mt-[28px] flex flex-col gap-[28px] lg:flex-row lg:items-center lg:gap-[40px]">
             <div className="lg:flex-1">
               <p className="text-[12px] leading-[14px] tracking-[2px] text-plum">
-                УСЛУГА
+                {page.eyebrow}
               </p>
               <h1 className="mt-[12px] text-[32px] font-bold italic leading-[36px] tracking-[-0.5px] text-ink lg:text-[40px] lg:leading-[44px]">
                 {service.title}
               </h1>
               <p className="mt-[10px] text-[18px] italic leading-[26px] text-plum">
-                {service.tagline}
+                {service.shortDescription}
               </p>
               <p className="mt-[16px] max-w-[520px] text-[16px] leading-[25.6px] text-muted">
                 {service.intro}
               </p>
               <div className="mt-[28px] flex flex-col gap-[12px] sm:flex-row">
                 <a
-                  href="/#form-plan"
+                  href={page.primaryCtaHref}
                   className="flex h-[50px] w-full max-w-[280px] items-center justify-center rounded-[12px] bg-violet px-[24px] text-[15px] font-bold italic text-white drop-shadow-[0px_6px_9px_rgba(127,100,174,0.35)] transition-colors hover:bg-plum sm:w-auto"
                 >
-                  Планирам събитие
+                  {page.primaryCtaLabel}
                 </a>
                 <a
-                  href="/#uslugi"
+                  href={page.secondaryCtaHref}
                   className="flex h-[50px] w-full max-w-[280px] items-center justify-center rounded-[12px] border border-line bg-white px-[24px] text-[15px] font-bold italic text-plum transition-colors hover:bg-[#f3edf8] sm:w-auto"
                 >
-                  Всички услуги
+                  {page.secondaryCtaLabel}
                 </a>
               </div>
             </div>
@@ -100,10 +115,10 @@ export default async function ServicePage({ params }: PageProps) {
         {/* Какво включва */}
         <section className="mx-auto w-full max-w-[1132px] px-[24px] pt-[56px]">
           <p className="text-[12px] leading-[14px] tracking-[2px] text-plum">
-            КАКВО ВКЛЮЧВА
+            {page.includesEyebrow}
           </p>
           <h2 className="mt-[10px] text-[26px] font-bold italic leading-[30px] tracking-[-0.34px] text-ink lg:text-[30px]">
-            Всичко за {service.title.toLowerCase()}
+            {page.includesTitlePrefix} {service.title.toLowerCase()}
           </h2>
           <ul className="mt-[28px] grid grid-cols-1 gap-[14px] sm:grid-cols-2 lg:grid-cols-3">
             {service.includes.map((item) => (
@@ -125,10 +140,10 @@ export default async function ServicePage({ params }: PageProps) {
         {/* Защо през EventAT */}
         <section className="mx-auto w-full max-w-[1132px] px-[24px] pt-[56px] pb-[72px]">
           <p className="text-[12px] leading-[14px] tracking-[2px] text-plum">
-            ЗАЩО ПРЕЗ EVENTAT
+            {page.whyEyebrow}
           </p>
           <h2 className="mt-[10px] text-[26px] font-bold italic leading-[30px] tracking-[-0.34px] text-ink lg:text-[30px]">
-            Спокойствие на всяка стъпка
+            {page.whyTitle}
           </h2>
           <div className="mt-[28px] grid grid-cols-1 gap-[20px] sm:grid-cols-3">
             {service.highlights.map((highlight) => (
@@ -154,23 +169,27 @@ export default async function ServicePage({ params }: PageProps) {
             }}
           >
             <h2 className="text-[24px] font-bold italic leading-[32px] text-white lg:text-[28px]">
-              Готов ли си за {service.title.toLowerCase()}?
+              {service.ctaTitle ||
+                `${page.bottomCtaTitlePrefix} ${service.title.toLowerCase()}?`}
             </h2>
             <p className="mx-auto mt-[10px] max-w-[520px] text-[15px] leading-[23px] text-white/72">
-              Запиши се в листата и бъди сред първите, които ще резервират
-              проверени изпълнители през EventAT.
+              {service.ctaSubtitle || page.bottomCtaSubtitle}
             </p>
             <a
-              href="/#form-plan"
+              href={service.ctaButtonHref || page.bottomCtaButtonHref}
               className="mt-[24px] inline-flex h-[50px] items-center justify-center rounded-[12px] bg-white px-[28px] text-[15px] font-bold italic text-plum transition-colors hover:bg-[#f3edf8]"
             >
-              Резервирай своето място
+              {service.ctaButtonLabel || page.bottomCtaButtonLabel}
             </a>
           </div>
         </section>
       </div>
 
-      <Footer />
+      <Footer
+        content={footer}
+        logoText={header.logoText}
+        logoSubtext={header.logoSubtext}
+      />
     </main>
   );
 }

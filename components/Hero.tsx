@@ -1,3 +1,6 @@
+import { HERO_FALLBACK_IMAGE, HOME_DEFAULTS } from "@/lib/defaults";
+import type { HomeContent } from "@/lib/content";
+
 const HERO_BLOBS = [
   { left: 115, top: 144, size: 180, color: "rgba(255,220,240,0.75)" },
   { left: 259, top: 481, size: 110, color: "rgba(255,200,120,0.6)" },
@@ -6,13 +9,17 @@ const HERO_BLOBS = [
   { left: 605, top: 488, size: 90, color: "rgba(255,235,180,0.5)" },
 ];
 
-export default function Hero() {
+export default function Hero({ content }: { content?: HomeContent["hero"] }) {
+  const c = content ?? { ...HOME_DEFAULTS.hero, backgroundImage: null };
+  const backgroundImage = c.backgroundImage ?? HERO_FALLBACK_IMAGE;
+
   return (
     <section className="relative overflow-hidden lg:h-[802px]">
       <div className="absolute inset-0 overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           alt=""
-          src="/images/hero-bg.jpg"
+          src={backgroundImage}
           className="absolute left-0 top-0 size-full max-w-none object-cover lg:left-[-13.2%] lg:top-[-1.4%] lg:h-[124%] lg:w-[126.4%]"
         />
       </div>
@@ -84,7 +91,7 @@ export default function Hero() {
         </div>
 
         <div className="mt-[36px] flex flex-col items-center gap-[4.7px] text-center text-[28px] font-bold italic leading-[32px] tracking-[-0.6px] lg:mt-[44px] lg:whitespace-nowrap lg:text-[36.18px] lg:leading-[32.7px] lg:tracking-[-0.91px]">
-          <p className="text-ink">Твоето следващо</p>
+          <p className="text-ink">{c.headingLine1}</p>
           <p>
             <span
               className="bg-clip-text text-transparent"
@@ -93,30 +100,28 @@ export default function Hero() {
                   "linear-gradient(177.9deg, #7f64ae 0%, #664d92 60%, #ebbfdb 100%)",
               }}
             >
-              незабравимо събитие{" "}
+              {c.headingHighlight}{" "}
             </span>
-            <span className="text-ink">започва тук</span>
+            <span className="text-ink">{c.headingSuffix}</span>
           </p>
         </div>
 
         <p className="mt-[12px] w-full max-w-[798px] text-center text-[17px] leading-[24px] text-muted lg:text-[20px] lg:leading-[27.9px]">
-          Резервирай проверени изпълнители за сватби, рождени дни и
-          корпоративни събития DJ-и, танцьори, певци, фотографи и още, със
-          сигурни плащания през платформата.
+          {c.subtitle}
         </p>
 
         <div className="mt-[32px] flex w-full flex-col items-center gap-[12px] sm:w-auto sm:flex-row lg:mt-[52px]">
           <a
-            href="#form-plan"
+            href={c.primaryCtaHref}
             className="flex h-[53px] w-full max-w-[320px] items-center justify-center rounded-[12px] bg-violet text-[15px] font-bold italic text-white transition-colors hover:bg-plum sm:w-[189px]"
           >
-            Планирам събитие
+            {c.primaryCtaLabel}
           </a>
           <a
-            href="#form-offer"
+            href={c.secondaryCtaHref}
             className="flex h-[53px] w-full max-w-[320px] items-center justify-center rounded-[12px] bg-white text-[15px] font-bold italic text-plum transition-colors hover:bg-[#f3edf8] sm:w-[179px]"
           >
-            Предлагам услуги
+            {c.secondaryCtaLabel}
           </a>
         </div>
       </div>

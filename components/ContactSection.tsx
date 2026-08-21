@@ -3,6 +3,11 @@
 import { useState } from "react";
 import { submitContact } from "@/app/(frontend)/actions/submitContact";
 import { pushEvent } from "@/lib/analytics";
+import {
+  CONTACTS_PAGE_DEFAULTS,
+  SITE_SETTINGS_DEFAULTS,
+} from "@/lib/defaults";
+import type { ContactsPageContent } from "@/lib/content";
 
 const ERROR_COLOR = "#c0455e";
 const EMAIL_PATTERN = /^\S+@\S+\.\S+$/;
@@ -25,7 +30,18 @@ function FieldError({ message }: { message: string }) {
   );
 }
 
-export default function ContactSection() {
+type ContactSectionProps = {
+  content?: ContactsPageContent;
+  contactEmail?: string;
+  contactAddress?: string;
+};
+
+export default function ContactSection({
+  content,
+  contactEmail = SITE_SETTINGS_DEFAULTS.contactEmail,
+  contactAddress = SITE_SETTINGS_DEFAULTS.contactAddress,
+}: ContactSectionProps) {
+  const c = content ?? CONTACTS_PAGE_DEFAULTS;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -99,42 +115,42 @@ export default function ContactSection() {
       <div className="mx-auto w-full max-w-[1132px] px-[24px] pt-[56px] pb-[72px]">
         <div className="flex flex-col items-center text-center">
           <p className="text-[12px] leading-[14px] tracking-[2px] text-plum">
-            КОНТАКТИ
+            {c.eyebrow}
           </p>
           <h1 className="mt-[10px] text-[28px] font-bold italic leading-[30px] tracking-[-0.34px] text-ink lg:text-[34px] lg:leading-[34px]">
-            Свържи се с нас
+            {c.title}
           </h1>
           <p className="mt-[9px] text-[16px] leading-[23.25px] text-muted">
-            Пиши ни за въпроси, партньорства или просто да кажеш здравей.
+            {c.subtitle}
           </p>
         </div>
 
         <div className="mt-[48px] flex flex-col gap-[24px] lg:flex-row lg:items-start lg:justify-center lg:gap-[32px]">
           <div className="w-full rounded-[18px] border border-line bg-white p-[28px] shadow-[0px_6px_18px_0px_rgba(102,77,146,0.06)] lg:w-[360px] lg:shrink-0">
             <h2 className="text-[20px] font-bold italic leading-[27.9px] text-ink">
-              Информация за контакт
+              {c.infoCardTitle}
             </h2>
             <div className="mt-[20px]">
               <p className="text-[12px] leading-[17px] tracking-[2px] text-plum">
-                АДРЕС
+                {c.addressLabel}
               </p>
               <p className="mt-[6px] text-[15px] leading-[22px] text-muted">
-                гр. София, бул. Свети Наум 30, етаж 5
+                {contactAddress}
               </p>
             </div>
             <div className="mt-[18px]">
               <p className="text-[12px] leading-[17px] tracking-[2px] text-plum">
-                ИМЕЙЛ
+                {c.emailLabel}
               </p>
               <a
-                href="mailto:hello.eventat@gmail.com"
+                href={`mailto:${contactEmail}`}
                 className="mt-[6px] inline-block text-[15px] leading-[22px] text-plum transition-colors hover:text-violet"
               >
-                hello.eventat@gmail.com
+                {contactEmail}
               </a>
             </div>
             <p className="mt-[22px] border-t border-line pt-[16px] text-[13px] leading-[19px] text-muted">
-              Отговаряме обикновено в рамките на един работен ден.
+              {c.responseNote}
             </p>
           </div>
 
@@ -147,11 +163,10 @@ export default function ContactSection() {
               <div className="flex min-h-[320px] flex-col items-center justify-center text-center">
                 <span className="text-[28px] text-blush">✦</span>
                 <h2 className="mt-[10px] text-[22px] font-bold italic text-ink">
-                  Благодарим ти!
+                  {c.successTitle}
                 </h2>
                 <p className="mt-[8px] max-w-[360px] text-[14px] leading-[21px] text-muted">
-                  Получихме съобщението ти и ще се свържем с теб възможно
-                  най-скоро.
+                  {c.successText}
                 </p>
               </div>
             ) : (
@@ -178,14 +193,14 @@ export default function ContactSection() {
                   <div className="flex-1">
                     <label className="block">
                       <span className="text-[13px] leading-[20.15px] text-muted">
-                        Име
+                        {c.nameLabel}
                       </span>
                       <input
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         onBlur={() => markTouched("name")}
-                        placeholder="Твоето име"
+                        placeholder={c.namePlaceholder}
                         className={`h-[49px] ${fieldClasses(!!shownNameError)}`}
                       />
                     </label>
@@ -194,14 +209,14 @@ export default function ContactSection() {
                   <div className="flex-1">
                     <label className="block">
                       <span className="text-[13px] leading-[20.15px] text-muted">
-                        Имейл
+                        {c.emailFieldLabel}
                       </span>
                       <input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         onBlur={() => markTouched("email")}
-                        placeholder="ime@example.com"
+                        placeholder={c.emailPlaceholder}
                         className={`h-[49px] ${fieldClasses(!!shownEmailError)}`}
                       />
                     </label>
@@ -212,13 +227,13 @@ export default function ContactSection() {
                 <div className="mt-[14px]">
                   <label className="block">
                     <span className="text-[13px] leading-[20.15px] text-muted">
-                      Съобщение
+                      {c.messageLabel}
                     </span>
                     <textarea
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                       onBlur={() => markTouched("message")}
-                      placeholder="Как можем да помогнем?"
+                      placeholder={c.messagePlaceholder}
                       rows={6}
                       className={`resize-none py-[13px] ${fieldClasses(!!shownMessageError)}`}
                     />
@@ -237,7 +252,7 @@ export default function ContactSection() {
                       : "cursor-not-allowed opacity-45"
                   }`}
                 >
-                  {isSubmitting ? "Изпращане…" : "Изпрати съобщение"}
+                  {isSubmitting ? "Изпращане…" : c.submitLabel}
                 </button>
                 {!isValid && submitAttempted && (
                   <p

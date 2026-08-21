@@ -1,46 +1,32 @@
 import SectionHeading from "./SectionHeading";
+import { HOME_DEFAULTS, PROCESS_STEP_WIDTHS } from "@/lib/defaults";
 
-const STEPS = [
-  {
-    number: "01",
-    title: "Открий",
-    text: "Разгледай изпълнители и услуги, подходящи за твоя празник.",
-    width: 197,
-  },
-  {
-    number: "02",
-    title: "Свържи се",
-    text: "Говори директно с изпълнителя, обсъди визията си и получи персонална оферта.",
-    width: 243,
-  },
-  {
-    number: "03",
-    title: "Резервирай",
-    text: "Плати през EventAT със защита на купувача - парите ти са в безопасност до събитието.",
-    width: 243,
-  },
-  {
-    number: "04",
-    title: "Празнувай",
-    text: "Наслади се на перфектно изпълненото събитие, спокойно и без стрес.",
-    width: 229,
-  },
-];
+type ProcessProps = {
+  content?: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    steps: { number: string; title: string; text: string }[];
+  };
+};
 
-export default function Process() {
+export default function Process({ content }: ProcessProps) {
+  const c = content ?? HOME_DEFAULTS.processSection;
+  const steps = c.steps?.length ? c.steps : HOME_DEFAULTS.processSection.steps;
+
   return (
     <section
       id="kak-raboti"
       className="mt-[64px] scroll-mt-[70px] bg-[#fbf6fa] pt-[56px] pb-[56px] lg:mt-[88px] xl:h-[440px] xl:pb-0"
     >
       <SectionHeading
-        eyebrow="ЛЕСЕН ПРОЦЕС"
-        title="От идея до празнуване"
-        subtitle="Четири стъпки между теб и перфектно организираното събитие."
+        eyebrow={c.eyebrow}
+        title={c.title}
+        subtitle={c.subtitle}
       />
       <div className="mx-auto mt-[45px] flex max-w-[420px] flex-col gap-[40px] px-[24px] xl:relative xl:block xl:h-[186px] xl:w-[1158px] xl:max-w-none xl:px-0">
         <div className="absolute left-[136px] top-[38px] hidden h-[2px] w-[860px] bg-lilac opacity-50 xl:block" />
-        {STEPS.map((step, i) => (
+        {steps.map((step, i) => (
           <div
             key={step.number}
             className="flex flex-col items-center xl:absolute xl:top-[8px] xl:w-[291px]"
@@ -56,7 +42,7 @@ export default function Process() {
             </h3>
             <p
               className="mt-[8px] max-w-full text-center text-[16px] leading-[18px] text-muted"
-              style={{ width: step.width }}
+              style={{ width: PROCESS_STEP_WIDTHS[i] ?? 243 }}
             >
               {step.text}
             </p>

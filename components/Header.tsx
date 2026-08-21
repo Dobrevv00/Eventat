@@ -2,29 +2,29 @@
 
 import { useState } from "react";
 import { ensureAnchorScroll } from "@/lib/scrollToAnchor";
+import { HEADER_DEFAULTS } from "@/lib/defaults";
+import type { HeaderContent } from "@/lib/content";
 
-function Logo() {
+function Logo({
+  text = HEADER_DEFAULTS.logoText,
+  subtext = HEADER_DEFAULTS.logoSubtext,
+}: {
+  text?: string;
+  subtext?: string;
+}) {
   return (
     <a href="/" className="group relative block font-noto leading-none">
       <p className="text-[27.68px] font-bold tracking-[1.26px] text-plum transition-colors duration-200 group-hover:text-violet">
-        EVENTAT
+        {text}
       </p>
       <p className="mt-[2.5px] ml-[1.3px] text-[8.93px] tracking-[3.15px] text-lilac transition-colors duration-200 group-hover:text-violet">
-        PLAN YOUR EVENT
+        {subtext}
       </p>
     </a>
   );
 }
 
 export { Logo };
-
-const NAV_ITEMS = [
-  { label: "Как работи", href: "/#kak-raboti" },
-  { label: "Услуги", href: "/#uslugi" },
-  { label: "Поводи", href: "/#uslugi" },
-  { label: "За изпълнители", href: "/#form-offer" },
-  { label: "Контакти", href: "/kontakti" },
-];
 
 function handleNavClick(href: string) {
   const hash = href.split("#")[1];
@@ -34,15 +34,17 @@ function handleNavClick(href: string) {
   }
 }
 
-export default function Header() {
+export default function Header({ content }: { content?: HeaderContent }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const c = content ?? HEADER_DEFAULTS;
+  const navItems = c.navItems?.length ? c.navItems : HEADER_DEFAULTS.navItems;
 
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-white/70 backdrop-blur-md backdrop-saturate-150">
       <div className="mx-auto flex h-[68px] w-full max-w-[1210px] items-center justify-between px-[20px]">
-        <Logo />
+        <Logo text={c.logoText} subtext={c.logoSubtext} />
         <nav className="hidden items-center gap-[30px] text-[14px] text-ink lg:flex">
-          {NAV_ITEMS.map((item) => (
+          {navItems.map((item) => (
             <a
               key={item.label}
               href={item.href}
@@ -54,18 +56,20 @@ export default function Header() {
           ))}
         </nav>
         <div className="flex items-center gap-[10px]">
-          <button
-            aria-label="Любими"
-            className="size-[32px] rounded-[8.4px] border-[0.84px] border-line text-center font-sans text-[13.45px] text-plum transition-colors hover:border-lilac hover:bg-[#f4eff5]"
-          >
-            ♡
-          </button>
+          {c.showFavorites !== false && (
+            <button
+              aria-label="Любими"
+              className="size-[32px] rounded-[8.4px] border-[0.84px] border-line text-center font-sans text-[13.45px] text-plum transition-colors hover:border-lilac hover:bg-[#f4eff5]"
+            >
+              ♡
+            </button>
+          )}
           <a
-            href="/#form-offer"
-            onClick={() => handleNavClick("/#form-offer")}
+            href={c.ctaHref}
+            onClick={() => handleNavClick(c.ctaHref)}
             className="hidden h-[40px] items-center justify-center rounded-[10px] bg-violet px-[19px] font-jakarta text-[11.77px] font-semibold text-white drop-shadow-[0px_5px_7.6px_rgba(127,100,174,0.35)] transition-colors hover:bg-plum sm:flex"
           >
-            Добави услуга
+            {c.ctaLabel}
           </a>
           <button
             aria-label="Меню"
@@ -79,7 +83,7 @@ export default function Header() {
       </div>
       {menuOpen && (
         <nav className="flex flex-col border-t border-line bg-white px-[24px] py-[10px] lg:hidden">
-          {NAV_ITEMS.map((item) => (
+          {navItems.map((item) => (
             <a
               key={item.label}
               href={item.href}
@@ -93,14 +97,14 @@ export default function Header() {
             </a>
           ))}
           <a
-            href="/#form-offer"
+            href={c.ctaHref}
             onClick={() => {
               setMenuOpen(false);
-              handleNavClick("/#form-offer");
+              handleNavClick(c.ctaHref);
             }}
             className="mt-[6px] mb-[8px] flex h-[44px] items-center justify-center rounded-[10px] bg-violet font-jakarta text-[13px] font-semibold text-white transition-colors hover:bg-plum sm:hidden"
           >
-            Добави услуга
+            {c.ctaLabel}
           </a>
         </nav>
       )}

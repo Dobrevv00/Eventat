@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { getFooterContent, getHeaderContent } from "@/lib/content";
 import CookieSettingsButton from "@/components/CookieSettingsButton";
 
 export const metadata: Metadata = {
@@ -65,10 +66,15 @@ function List({ items }: { items: React.ReactNode[] }) {
   );
 }
 
-export default function PolitikaBiskvitkiPage() {
+export default async function PolitikaBiskvitkiPage() {
+  const [header, footer] = await Promise.all([
+    getHeaderContent(),
+    getFooterContent(),
+  ]);
+
   return (
     <main className="flex min-h-screen flex-col overflow-x-clip bg-white">
-      <Header />
+      <Header content={header} />
 
       <section
         className="border-b border-line"
@@ -216,7 +222,11 @@ export default function PolitikaBiskvitkiPage() {
         </article>
       </div>
 
-      <Footer />
+      <Footer
+        content={footer}
+        logoText={header.logoText}
+        logoSubtext={header.logoSubtext}
+      />
     </main>
   );
 }

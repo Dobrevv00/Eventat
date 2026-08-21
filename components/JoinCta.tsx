@@ -2,18 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { joinSelections, pushEvent } from "@/lib/analytics";
+import { HOME_DEFAULTS } from "@/lib/defaults";
+import type { HomeContent } from "@/lib/content";
 
 const SPARKLES = [
   { left: 317, top: 144, size: 13, opacity: 0.62 },
   { left: 1164, top: 237, size: 19, opacity: 0.91 },
   { left: 1023, top: 640, size: 13, opacity: 0.6 },
   { left: 595, top: 724, size: 19, opacity: 0.92 },
-];
-
-const PERKS = [
-  "Ексклузивни условия при стартирането",
-  "Приоритет пред всички следващи регистрации",
-  "Изненади и оферти само за нашата общност",
 ];
 
 const OTHER_VALUE = "__other__";
@@ -167,9 +163,6 @@ const OFFER_CHECKBOX_GROUPS: CheckboxGroupDef[] = [
     min: 1,
   },
 ];
-
-const OPT_IN_LABEL =
-  "Желая да получа ранен достъп до EventAT и специални предложения при старта.";
 
 const TAB_ACTIVE_CLASSES =
   "h-[42px] flex-1 cursor-default rounded-[9px] bg-white text-[14px] font-bold italic text-plum drop-shadow-[0px_4px_5px_rgba(102,77,146,0.08)]";
@@ -351,7 +344,13 @@ function CheckboxDropdown({
 
 const EMAIL_PATTERN = /^\S+@\S+\.\S+$/;
 
-export default function JoinCta() {
+export default function JoinCta({
+  content,
+}: {
+  content?: HomeContent["joinCta"];
+}) {
+  const c = content ?? HOME_DEFAULTS.joinCta;
+  const perks = c.perks?.length ? c.perks : HOME_DEFAULTS.joinCta.perks;
   const [activeTab, setActiveTab] = useState<"plan" | "offer">("plan");
   const [selections, setSelections] = useState<Record<string, string[]>>({});
   const [customTexts, setCustomTexts] = useState<Record<string, string>>({});
@@ -511,7 +510,7 @@ export default function JoinCta() {
       <div className="relative mx-auto flex w-full max-w-[600px] flex-col gap-[48px] px-[24px] py-[64px] lg:max-w-[1180px] lg:flex-row lg:justify-between lg:gap-[48px] lg:pt-[104px] lg:pb-[104px]">
         <div className="lg:mt-[253px] lg:max-w-[549px] lg:flex-1">
           <h2 className="text-[34px] leading-[44px] tracking-[-0.8px] text-white lg:text-[40px] lg:leading-[50px] xl:whitespace-nowrap xl:text-[48px] xl:leading-[57.24px] xl:tracking-[-1.08px]">
-            Стани част от{" "}
+            {c.headingPrefix}{" "}
             <span
               className="bg-clip-text font-bold italic text-transparent"
               style={{
@@ -519,29 +518,28 @@ export default function JoinCta() {
                   "linear-gradient(162deg, #ebbfdb 0%, #ffd9ee 50%, #ebbfdb 100%)",
               }}
             >
-              EventAT
+              {c.headingHighlight}
             </span>
           </h2>
           <p className="mt-[12px] w-full max-w-[460px] text-[16px] leading-[25.6px] text-white/72">
-            Подсигури си ранен достъп, ексклузивни условия и приоритет пред
-            всички, които ще се присъединят след старта.
+            {c.subtitle}
           </p>
           <div className="mt-[20px] flex h-[50px] w-fit items-center rounded-full border border-white/12 bg-white/6 pl-[29px] pr-[19px] text-[16px] leading-[21.7px] lg:mt-0">
             <p>
-              <span className="text-white">500+ души</span>
-              <span className="text-white/90"> вече се записаха</span>
+              <span className="text-white">{c.badgeStrong}</span>
+              <span className="text-white/90">{c.badgeRest}</span>
             </p>
           </div>
           <ul className="mt-[21px] flex flex-col gap-[8px]">
-            {PERKS.map((perk) => (
+            {perks.map((perk) => (
               <li
-                key={perk}
+                key={perk.text}
                 className="flex items-start text-[15px] leading-[23.25px] text-white/82"
               >
                 <span className="w-[22px] shrink-0 text-center text-[14px] leading-[21.7px] text-blush">
                   ✦
                 </span>
-                {perk}
+                {perk.text}
               </li>
             ))}
           </ul>
@@ -563,20 +561,20 @@ export default function JoinCta() {
             className="relative w-full rounded-[22px] border border-white/20 bg-white p-[24px] drop-shadow-[0px_30px_30px_rgba(0,0,0,0.35)] sm:p-[32px] lg:min-h-[767px]"
           >
             <p className="pt-[5px] text-[12px] leading-[17px] tracking-[2px] text-plum">
-              ЗАПИШИ СЕ БЕЗПЛАТНО
+              {c.formEyebrow}
             </p>
             <h3 className="mt-[7px] text-[24px] font-bold italic leading-[37.2px] tracking-[-0.24px] text-ink">
-              Резервирай своето място
+              {c.formTitle}
             </h3>
 
             {submitted ? (
               <div className="flex min-h-[320px] flex-col items-center justify-center text-center lg:min-h-[600px]">
                 <span className="text-[28px] text-blush">✦</span>
                 <h4 className="mt-[10px] text-[22px] font-bold italic text-ink">
-                  Ти си в листата!
+                  {c.successTitle}
                 </h4>
                 <p className="mt-[8px] max-w-[360px] text-[14px] leading-[21px] text-muted">
-                  Благодарим ти! Ще те уведомим първи, когато EventAT стартира.
+                  {c.successText}
                 </p>
               </div>
             ) : (
@@ -589,7 +587,7 @@ export default function JoinCta() {
                 onClick={() => setActiveTab("plan")}
                 className={activeTab === "plan" ? TAB_ACTIVE_CLASSES : TAB_INACTIVE_CLASSES}
               >
-                Планирам събитие
+                {c.tabPlanLabel}
               </button>
               <button
                 type="button"
@@ -598,7 +596,7 @@ export default function JoinCta() {
                 onClick={() => setActiveTab("offer")}
                 className={activeTab === "offer" ? TAB_ACTIVE_CLASSES : TAB_INACTIVE_CLASSES}
               >
-                Предлагам услуга
+                {c.tabOfferLabel}
               </button>
             </div>
 
@@ -606,14 +604,14 @@ export default function JoinCta() {
               <div className="flex-1">
                 <label className="block">
                   <span className="text-[13px] leading-[20.15px] text-muted">
-                    Име
+                    {c.nameLabel}
                   </span>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     onBlur={() => markTouched("name")}
-                    placeholder="Твоето име"
+                    placeholder={c.namePlaceholder}
                     className={inputClasses(!!shownNameError)}
                   />
                 </label>
@@ -622,14 +620,14 @@ export default function JoinCta() {
               <div className="flex-1">
                 <label className="block">
                   <span className="text-[13px] leading-[20.15px] text-muted">
-                    Имейл
+                    {c.emailLabel}
                   </span>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     onBlur={() => markTouched("email")}
-                    placeholder="ime@example.com"
+                    placeholder={c.emailPlaceholder}
                     className={inputClasses(!!shownEmailError)}
                   />
                 </label>
@@ -640,13 +638,13 @@ export default function JoinCta() {
             {activeTab === "offer" && (
               <label className="mt-[14px] block">
                 <span className="text-[13px] leading-[20.15px] text-muted">
-                  Уебсайт
+                  {c.websiteLabel}
                 </span>
                 <input
                   type="url"
                   value={website}
                   onChange={(e) => setWebsite(e.target.value)}
-                  placeholder="https://"
+                  placeholder={c.websitePlaceholder}
                   className={inputClasses(false)}
                 />
               </label>
@@ -675,7 +673,7 @@ export default function JoinCta() {
                   onChange={(e) => setOptIn(e.target.checked)}
                   className="mt-[2px] size-[16px] shrink-0 accent-violet"
                 />
-                {OPT_IN_LABEL}
+                {c.optInLabel}
               </label>
             )}
 
@@ -686,7 +684,7 @@ export default function JoinCta() {
                 isValid ? "hover:bg-plum" : "cursor-not-allowed opacity-45"
               }`}
             >
-              Запиши се в листата
+              {c.submitLabel}
             </button>
             {!isValid && submitAttempted && (
               <p
@@ -697,7 +695,7 @@ export default function JoinCta() {
               </p>
             )}
             <p className="mt-[10px] text-center text-[12px] leading-[18.6px] text-muted">
-              Никога няма да изпратим спам. Само новина за старта.
+              {c.formDisclaimer}
             </p>
               </>
             )}

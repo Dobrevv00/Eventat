@@ -68,6 +68,8 @@ export interface Config {
   blocks: {};
   collections: {
     users: User;
+    media: Media;
+    services: Service;
     'contact-submissions': ContactSubmission;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -77,6 +79,8 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
+    services: ServicesSelect<false> | ServicesSelect<true>;
     'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -87,8 +91,22 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'site-settings': SiteSetting;
+    header: Header;
+    footer: Footer;
+    'home-page': HomePage;
+    'services-page': ServicesPage;
+    'contacts-page': ContactsPage;
+  };
+  globalsSelect: {
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    header: HeaderSelect<false> | HeaderSelect<true>;
+    footer: FooterSelect<false> | FooterSelect<true>;
+    'home-page': HomePageSelect<false> | HomePageSelect<true>;
+    'services-page': ServicesPageSelect<false> | ServicesPageSelect<true>;
+    'contacts-page': ContactsPageSelect<false> | ContactsPageSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -144,6 +162,80 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  /**
+   * Кратко описание на изображението за екранни четци и SEO.
+   */
+  alt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * Услугите се показват в секция „Услуги“ на главната страница и имат собствена страница.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services".
+ */
+export interface Service {
+  id: number;
+  title: string;
+  /**
+   * Внимание: промяната сменя URL адреса и вреди на позициите в Google.
+   */
+  slug: string;
+  /**
+   * Редът под името в картата на главната страница.
+   */
+  shortDescription: string;
+  /**
+   * Използва се и в картата, и в горната част на страницата.
+   */
+  heroImage?: (number | null) | Media;
+  /**
+   * По-малкото число излиза по-напред.
+   */
+  order?: number | null;
+  active?: boolean | null;
+  intro: string;
+  includes?:
+    | {
+        item: string;
+        id?: string | null;
+      }[]
+    | null;
+  highlights?:
+    | {
+        title: string;
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Ако е празно, се използва общото заглавие плюс името на услугата.
+   */
+  ctaTitle?: string | null;
+  ctaSubtitle?: string | null;
+  ctaButtonLabel?: string | null;
+  ctaButtonHref?: string | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "contact-submissions".
  */
 export interface ContactSubmission {
@@ -187,6 +279,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'media';
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'services';
+        value: number | Service;
       } | null)
     | ({
         relationTo: 'contact-submissions';
@@ -258,6 +358,58 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_select".
+ */
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services_select".
+ */
+export interface ServicesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  shortDescription?: T;
+  heroImage?: T;
+  order?: T;
+  active?: T;
+  intro?: T;
+  includes?:
+    | T
+    | {
+        item?: T;
+        id?: T;
+      };
+  highlights?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        id?: T;
+      };
+  ctaTitle?: T;
+  ctaSubtitle?: T;
+  ctaButtonLabel?: T;
+  ctaButtonHref?: T;
+  seoTitle?: T;
+  seoDescription?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "contact-submissions_select".
  */
 export interface ContactSubmissionsSelect<T extends boolean = true> {
@@ -309,6 +461,448 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * Общи данни за целия сайт. Текстовете по секциите се редактират от „Страници“.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: number;
+  siteName?: string | null;
+  contactEmail?: string | null;
+  contactAddress?: string | null;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  /**
+   * Препоръчителен размер 1200×630 пиксела.
+   */
+  ogImage?: (number | null) | Media;
+  seeded?: boolean | null;
+  seedVersion?: number | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Горната лента на сайта — лого, меню и бутон.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "header".
+ */
+export interface Header {
+  id: number;
+  logoText?: string | null;
+  logoSubtext?: string | null;
+  ctaLabel?: string | null;
+  ctaHref?: string | null;
+  showFavorites?: boolean | null;
+  navItems?:
+    | {
+        label: string;
+        /**
+         * Например /kontakti или /#uslugi
+         */
+        href: string;
+        id?: string | null;
+      }[]
+    | null;
+  seeded?: boolean | null;
+  seedVersion?: number | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Долната лента на сайта. Логото се взема от „Хедър“, а контактните данни — от „Настройки на сайта“.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer".
+ */
+export interface Footer {
+  id: number;
+  links?:
+    | {
+        label: string;
+        href: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Отваря панела с настройки за бисквитки. Само надписът се променя.
+   */
+  cookieSettingsLabel?: string | null;
+  copyright?: string | null;
+  seeded?: boolean | null;
+  seedVersion?: number | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Съдържанието на секциите на началната страница. Списъкът с услуги се управлява от „Услуги“.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-page".
+ */
+export interface HomePage {
+  id: number;
+  hero?: {
+    headingLine1?: string | null;
+    headingHighlight?: string | null;
+    headingSuffix?: string | null;
+    subtitle?: string | null;
+    primaryCtaLabel?: string | null;
+    primaryCtaHref?: string | null;
+    secondaryCtaLabel?: string | null;
+    secondaryCtaHref?: string | null;
+    /**
+     * Ако е празно, се използва текущият фон от дизайна.
+     */
+    backgroundImage?: (number | null) | Media;
+  };
+  servicesSection?: {
+    eyebrow?: string | null;
+    title?: string | null;
+    subtitle?: string | null;
+  };
+  processSection?: {
+    eyebrow?: string | null;
+    title?: string | null;
+    subtitle?: string | null;
+    steps?:
+      | {
+          number: string;
+          title: string;
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  whyUsSection?: {
+    eyebrow?: string | null;
+    title?: string | null;
+    subtitle?: string | null;
+    features?:
+      | {
+          icon?: ('payments' | 'verified' | 'pricing' | 'booking' | 'quality' | 'support') | null;
+          title: string;
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  joinCta?: {
+    headingPrefix?: string | null;
+    headingHighlight?: string | null;
+    subtitle?: string | null;
+    badgeStrong?: string | null;
+    badgeRest?: string | null;
+    perks?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+    formEyebrow?: string | null;
+    formTitle?: string | null;
+    tabPlanLabel?: string | null;
+    tabOfferLabel?: string | null;
+    submitLabel?: string | null;
+    formDisclaimer?: string | null;
+    nameLabel?: string | null;
+    namePlaceholder?: string | null;
+    emailLabel?: string | null;
+    emailPlaceholder?: string | null;
+    websiteLabel?: string | null;
+    websitePlaceholder?: string | null;
+    optInLabel?: string | null;
+    successTitle?: string | null;
+    successText?: string | null;
+  };
+  newsletter?: {
+    title?: string | null;
+    subtitle?: string | null;
+    placeholder?: string | null;
+    buttonLabel?: string | null;
+    disclaimer?: string | null;
+  };
+  seeded?: boolean | null;
+  seedVersion?: number | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Текстовете, които се повтарят на всяка страница на услуга. Конкретната услуга се редактира в „Услуги“.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services-page".
+ */
+export interface ServicesPage {
+  id: number;
+  breadcrumbLabel?: string | null;
+  eyebrow?: string | null;
+  primaryCtaLabel?: string | null;
+  primaryCtaHref?: string | null;
+  secondaryCtaLabel?: string | null;
+  secondaryCtaHref?: string | null;
+  includesEyebrow?: string | null;
+  /**
+   * След този текст автоматично се добавя името на услугата.
+   */
+  includesTitlePrefix?: string | null;
+  whyEyebrow?: string | null;
+  whyTitle?: string | null;
+  /**
+   * След този текст автоматично се добавя името на услугата.
+   */
+  bottomCtaTitlePrefix?: string | null;
+  bottomCtaSubtitle?: string | null;
+  bottomCtaButtonLabel?: string | null;
+  bottomCtaButtonHref?: string | null;
+  seeded?: boolean | null;
+  seedVersion?: number | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Текстовете на страница /kontakti. Адресът и имейлът се вземат от „Настройки на сайта“.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contacts-page".
+ */
+export interface ContactsPage {
+  id: number;
+  eyebrow?: string | null;
+  title?: string | null;
+  subtitle?: string | null;
+  infoCardTitle?: string | null;
+  addressLabel?: string | null;
+  emailLabel?: string | null;
+  responseNote?: string | null;
+  nameLabel?: string | null;
+  namePlaceholder?: string | null;
+  emailFieldLabel?: string | null;
+  emailPlaceholder?: string | null;
+  messageLabel?: string | null;
+  messagePlaceholder?: string | null;
+  submitLabel?: string | null;
+  successTitle?: string | null;
+  successText?: string | null;
+  seeded?: boolean | null;
+  seedVersion?: number | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  siteName?: T;
+  contactEmail?: T;
+  contactAddress?: T;
+  metaTitle?: T;
+  metaDescription?: T;
+  ogImage?: T;
+  seeded?: T;
+  seedVersion?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "header_select".
+ */
+export interface HeaderSelect<T extends boolean = true> {
+  logoText?: T;
+  logoSubtext?: T;
+  ctaLabel?: T;
+  ctaHref?: T;
+  showFavorites?: T;
+  navItems?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+        id?: T;
+      };
+  seeded?: T;
+  seedVersion?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer_select".
+ */
+export interface FooterSelect<T extends boolean = true> {
+  links?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+        id?: T;
+      };
+  cookieSettingsLabel?: T;
+  copyright?: T;
+  seeded?: T;
+  seedVersion?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-page_select".
+ */
+export interface HomePageSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        headingLine1?: T;
+        headingHighlight?: T;
+        headingSuffix?: T;
+        subtitle?: T;
+        primaryCtaLabel?: T;
+        primaryCtaHref?: T;
+        secondaryCtaLabel?: T;
+        secondaryCtaHref?: T;
+        backgroundImage?: T;
+      };
+  servicesSection?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        subtitle?: T;
+      };
+  processSection?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        subtitle?: T;
+        steps?:
+          | T
+          | {
+              number?: T;
+              title?: T;
+              text?: T;
+              id?: T;
+            };
+      };
+  whyUsSection?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        subtitle?: T;
+        features?:
+          | T
+          | {
+              icon?: T;
+              title?: T;
+              text?: T;
+              id?: T;
+            };
+      };
+  joinCta?:
+    | T
+    | {
+        headingPrefix?: T;
+        headingHighlight?: T;
+        subtitle?: T;
+        badgeStrong?: T;
+        badgeRest?: T;
+        perks?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        formEyebrow?: T;
+        formTitle?: T;
+        tabPlanLabel?: T;
+        tabOfferLabel?: T;
+        submitLabel?: T;
+        formDisclaimer?: T;
+        nameLabel?: T;
+        namePlaceholder?: T;
+        emailLabel?: T;
+        emailPlaceholder?: T;
+        websiteLabel?: T;
+        websitePlaceholder?: T;
+        optInLabel?: T;
+        successTitle?: T;
+        successText?: T;
+      };
+  newsletter?:
+    | T
+    | {
+        title?: T;
+        subtitle?: T;
+        placeholder?: T;
+        buttonLabel?: T;
+        disclaimer?: T;
+      };
+  seeded?: T;
+  seedVersion?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services-page_select".
+ */
+export interface ServicesPageSelect<T extends boolean = true> {
+  breadcrumbLabel?: T;
+  eyebrow?: T;
+  primaryCtaLabel?: T;
+  primaryCtaHref?: T;
+  secondaryCtaLabel?: T;
+  secondaryCtaHref?: T;
+  includesEyebrow?: T;
+  includesTitlePrefix?: T;
+  whyEyebrow?: T;
+  whyTitle?: T;
+  bottomCtaTitlePrefix?: T;
+  bottomCtaSubtitle?: T;
+  bottomCtaButtonLabel?: T;
+  bottomCtaButtonHref?: T;
+  seeded?: T;
+  seedVersion?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contacts-page_select".
+ */
+export interface ContactsPageSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  subtitle?: T;
+  infoCardTitle?: T;
+  addressLabel?: T;
+  emailLabel?: T;
+  responseNote?: T;
+  nameLabel?: T;
+  namePlaceholder?: T;
+  emailFieldLabel?: T;
+  emailPlaceholder?: T;
+  messageLabel?: T;
+  messagePlaceholder?: T;
+  submitLabel?: T;
+  successTitle?: T;
+  successText?: T;
+  seeded?: T;
+  seedVersion?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

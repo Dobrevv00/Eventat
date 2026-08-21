@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { getFooterContent, getHeaderContent } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Общи условия — EventAT",
@@ -40,10 +41,15 @@ function List({ items }: { items: React.ReactNode[] }) {
   );
 }
 
-export default function ObshtiUsloviyaPage() {
+export default async function ObshtiUsloviyaPage() {
+  const [header, footer] = await Promise.all([
+    getHeaderContent(),
+    getFooterContent(),
+  ]);
+
   return (
     <main className="flex min-h-screen flex-col overflow-x-clip bg-white">
-      <Header />
+      <Header content={header} />
 
       <section
         className="border-b border-line"
@@ -243,7 +249,11 @@ export default function ObshtiUsloviyaPage() {
         </article>
       </div>
 
-      <Footer />
+      <Footer
+        content={footer}
+        logoText={header.logoText}
+        logoSubtext={header.logoSubtext}
+      />
     </main>
   );
 }

@@ -1,19 +1,39 @@
 import SectionHeading from "./SectionHeading";
-import { SERVICES } from "@/lib/services";
+import { HOME_DEFAULTS } from "@/lib/defaults";
+import type { ServiceContent } from "@/lib/content";
+import { SERVICES as STATIC_SERVICES } from "@/lib/services";
 
-export default function Services() {
+type ServicesProps = {
+  heading?: { eyebrow: string; title: string; subtitle: string };
+  services?: ServiceContent[];
+};
+
+const FALLBACK_SERVICES: ServiceContent[] = STATIC_SERVICES.map((s) => ({
+  slug: s.slug,
+  title: s.title,
+  shortDescription: s.tagline,
+  intro: s.intro,
+  image: s.image,
+  includes: s.includes,
+  highlights: s.highlights,
+}));
+
+export default function Services({ heading, services }: ServicesProps) {
+  const h = heading ?? HOME_DEFAULTS.servicesSection;
+  const items = services?.length ? services : FALLBACK_SERVICES;
+
   return (
     <section
       id="uslugi"
       className="mx-auto mt-[56px] w-full max-w-[1132px] scroll-mt-[88px] px-[24px] lg:px-0"
     >
       <SectionHeading
-        eyebrow="УСЛУГИ"
-        title="За всеки специален момент"
-        subtitle="От професионални DJ-и до елегантна украса - намери перфектния избор за твоето събитие."
+        eyebrow={h.eyebrow}
+        title={h.title}
+        subtitle={h.subtitle}
       />
       <div className="mt-[40px] grid grid-cols-1 gap-[20px] sm:grid-cols-2 lg:mt-[64px] lg:grid-cols-3">
-        {SERVICES.map((service) => (
+        {items.map((service) => (
           <a
             key={service.slug}
             href={`/uslugi/${service.slug}`}
@@ -32,7 +52,7 @@ export default function Services() {
                 {service.title}
               </h3>
               <p className="text-[14px] leading-[18.6px] text-muted">
-                {service.tagline}
+                {service.shortDescription}
               </p>
             </div>
           </a>
