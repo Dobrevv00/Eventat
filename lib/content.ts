@@ -118,7 +118,10 @@ export const getHomeContent = cache(async () => {
       primaryCtaHref: pick(hero.primaryCtaHref, d.hero.primaryCtaHref),
       secondaryCtaLabel: pick(hero.secondaryCtaLabel, d.hero.secondaryCtaLabel),
       secondaryCtaHref: pick(hero.secondaryCtaHref, d.hero.secondaryCtaHref),
-      backgroundImage: mediaUrl(hero.backgroundImage),
+      // Изображенията се сервират от /public както преди CMS интеграцията.
+      // Полето в Payload остава, но frontend-ът не зависи от него —
+      // Hero пада на HERO_FALLBACK_IMAGE ("/images/hero-bg.jpg").
+      backgroundImage: null as string | null,
     },
     servicesSection: {
       eyebrow: pick(services.eyebrow, d.servicesSection.eyebrow),
@@ -251,8 +254,11 @@ export const getServices = cache(async (): Promise<ServiceContent[]> => {
           staticMatch?.tagline ?? "",
         ),
         intro: pick(d.intro, staticMatch?.intro ?? ""),
+        // Оригиналните снимки от /public имат предимство — точно както преди
+        // CMS интеграцията. Payload Media се ползва само за услуга, добавена
+        // по-късно от админа, за която няма оригинален файл.
         image:
-          mediaUrl(d.heroImage) ?? staticMatch?.image ?? "/images/hero-bg.jpg",
+          staticMatch?.image ?? mediaUrl(d.heroImage) ?? "/images/hero-bg.jpg",
         includes: pick(
           (d.includes as { item?: string }[] | undefined)
             ?.map((row) => row?.item ?? "")
