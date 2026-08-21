@@ -71,6 +71,8 @@ export interface Config {
     media: Media;
     services: Service;
     'contact-submissions': ContactSubmission;
+    'event-planning-submissions': EventPlanningSubmission;
+    'service-provider-submissions': ServiceProviderSubmission;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -82,6 +84,8 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
     'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
+    'event-planning-submissions': EventPlanningSubmissionsSelect<false> | EventPlanningSubmissionsSelect<true>;
+    'service-provider-submissions': ServiceProviderSubmissionsSelect<false> | ServiceProviderSubmissionsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -253,6 +257,110 @@ export interface ContactSubmission {
   createdAt: string;
 }
 /**
+ * Записванията от таб „Планирам събитие“ в секцията за записване в листата.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "event-planning-submissions".
+ */
+export interface EventPlanningSubmission {
+  id: number;
+  name: string;
+  email: string;
+  /**
+   * Избор от 1 до 5. Възможни отговори: Рожден ден / Юбилей · Частно парти · Моминско / Ергенско парти · Сватба / Годеж · Бебешко или семейно събитие · Абитуриентски бал · Корпоративно събитие · Културно или обществено събитие · Друго (свободен текст)
+   */
+  event?: string[] | null;
+  /**
+   * Попълва се, когато е избрано „Друго“.
+   */
+  eventOther?: string | null;
+  /**
+   * Избор от 1 до 5. Възможни отговори: DJ и музиканти · Фотография и видео · Украса и балони · Водещи и артисти · Фотобудки и интерактивни услуги · Кетъринг и напитки · Локации · Друго (свободен текст)
+   */
+  service?: string[] | null;
+  /**
+   * Попълва се, когато е избрано „Друго“.
+   */
+  serviceOther?: string | null;
+  /**
+   * Избор от 1 до 5. Възможни отговори: Instagram · Facebook групи · Препоръки от приятели · Google · TikTok · Агенции за събития · Друг начин (свободен текст)
+   */
+  source?: string[] | null;
+  /**
+   * Попълва се, когато е избрано „Друг начин“.
+   */
+  sourceOther?: string | null;
+  /**
+   * Избор до 2. Възможни отговори: Намирането на подходящи изпълнители · Сравняването на оферти · Липсата на свободни дати · Комуникацията с различни доставчици · Координацията в деня на събитието · Не знам откъде да започна · Липсата на вдъхновение и идеи
+   */
+  challenge?: string[] | null;
+  /**
+   * Отметката за маркетингово съгласие във формата. Правно основание за бъдещи съобщения.
+   */
+  earlyAccessOptIn?: boolean | null;
+  status: 'new' | 'in_progress' | 'contacted' | 'completed' | 'spam';
+  /**
+   * Само за вътрешна употреба. Не се показва на подателя и не напуска админ панела.
+   */
+  internalNote?: string | null;
+  /**
+   * Страницата, от която е изпратена формата.
+   */
+  pagePath?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Записванията от таб „Предлагам услуга“ в секцията за записване в листата.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "service-provider-submissions".
+ */
+export interface ServiceProviderSubmission {
+  id: number;
+  name: string;
+  email: string;
+  /**
+   * Полето не е задължително във формата.
+   */
+  website?: string | null;
+  /**
+   * Избор от 1 до 5. Възможни отговори: DJ и музиканти · Народни танци и артисти · Фотография и видео · Фотобудки и интерактивни услуги · Украса и балони · Кетъринг и напитки · Локации · Друго (свободен текст)
+   */
+  offerServices?: string[] | null;
+  /**
+   * Попълва се, когато е избрано „Друго“.
+   */
+  offerServicesOther?: string | null;
+  /**
+   * Избор от 1 до 5. Възможни отговори: Instagram · Facebook · Google · Препоръки · Собствен уебсайт · Друго (свободен текст)
+   */
+  offerDiscovery?: string[] | null;
+  /**
+   * Попълва се, когато е избрано „Друго“.
+   */
+  offerDiscoveryOther?: string | null;
+  /**
+   * Избор от 1 до 10. Възможни отговори: София · Пловдив · Варна · Бургас · Русе · Стара Загора · Велико Търново · Плевен · Цялата страна · Друг (свободен текст)
+   */
+  offerCities?: string[] | null;
+  /**
+   * Попълва се, когато е избрано „Друг“.
+   */
+  offerCitiesOther?: string | null;
+  status: 'new' | 'in_progress' | 'contacted' | 'approved' | 'rejected' | 'spam';
+  /**
+   * Само за вътрешна употреба. Не се показва на подателя и не напуска админ панела.
+   */
+  internalNote?: string | null;
+  /**
+   * Страницата, от която е изпратена формата.
+   */
+  pagePath?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -291,6 +399,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'contact-submissions';
         value: number | ContactSubmission;
+      } | null)
+    | ({
+        relationTo: 'event-planning-submissions';
+        value: number | EventPlanningSubmission;
+      } | null)
+    | ({
+        relationTo: 'service-provider-submissions';
+        value: number | ServiceProviderSubmission;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -416,6 +532,47 @@ export interface ContactSubmissionsSelect<T extends boolean = true> {
   name?: T;
   email?: T;
   message?: T;
+  status?: T;
+  internalNote?: T;
+  pagePath?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "event-planning-submissions_select".
+ */
+export interface EventPlanningSubmissionsSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  event?: T;
+  eventOther?: T;
+  service?: T;
+  serviceOther?: T;
+  source?: T;
+  sourceOther?: T;
+  challenge?: T;
+  earlyAccessOptIn?: T;
+  status?: T;
+  internalNote?: T;
+  pagePath?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "service-provider-submissions_select".
+ */
+export interface ServiceProviderSubmissionsSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  website?: T;
+  offerServices?: T;
+  offerServicesOther?: T;
+  offerDiscovery?: T;
+  offerDiscoveryOther?: T;
+  offerCities?: T;
+  offerCitiesOther?: T;
   status?: T;
   internalNote?: T;
   pagePath?: T;

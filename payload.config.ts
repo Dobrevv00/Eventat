@@ -7,6 +7,8 @@ import { buildConfig } from "payload";
 import sharp from "sharp";
 
 import { ContactSubmissions } from "./collections/ContactSubmissions";
+import { EventPlanningSubmissions } from "./collections/EventPlanningSubmissions";
+import { ServiceProviderSubmissions } from "./collections/ServiceProviderSubmissions";
 import { Media } from "./collections/Media";
 import { Services } from "./collections/Services";
 import { Users } from "./collections/Users";
@@ -28,7 +30,14 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Services, ContactSubmissions],
+  collections: [
+    Users,
+    Media,
+    Services,
+    ContactSubmissions,
+    EventPlanningSubmissions,
+    ServiceProviderSubmissions,
+  ],
   globals: [SiteSettings, Header, Footer, HomePage, ServicesPage, ContactsPage],
   editor: lexicalEditor(),
   // Първоначално попълване с текущото съдържание. Идемпотентно — не създава

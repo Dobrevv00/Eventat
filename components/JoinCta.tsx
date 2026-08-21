@@ -2,8 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import { joinSelections, pushEvent } from "@/lib/analytics";
+import { submitJoinCta } from "@/app/(frontend)/actions/submitJoinCta";
 import { HOME_DEFAULTS } from "@/lib/defaults";
 import type { HomeContent } from "@/lib/content";
+import {
+  OTHER_VALUE,
+  PLAN_CHECKBOX_GROUPS,
+  OFFER_CHECKBOX_GROUPS,
+  type CheckboxGroupDef,
+} from "@/lib/joinCtaQuestions";
 
 const SPARKLES = [
   { left: 317, top: 144, size: 13, opacity: 0.62 },
@@ -12,157 +19,7 @@ const SPARKLES = [
   { left: 595, top: 724, size: 19, opacity: 0.92 },
 ];
 
-const OTHER_VALUE = "__other__";
 const ERROR_COLOR = "#c0455e";
-
-type CheckboxGroupDef = {
-  key: string;
-  label: string;
-  hint: string;
-  placeholder: string;
-  options: string[];
-  customOption?: string;
-  customPlaceholder?: string;
-  max: number;
-  min: number;
-};
-
-const PLAN_CHECKBOX_GROUPS: CheckboxGroupDef[] = [
-  {
-    key: "event",
-    label: "Какъв тип събитие планирате?",
-    hint: "",
-    placeholder: "Изберете събитие",
-    options: [
-      "Рожден ден / Юбилей",
-      "Частно парти",
-      "Моминско / Ергенско парти",
-      "Сватба / Годеж",
-      "Бебешко или семейно събитие",
-      "Абитуриентски бал",
-      "Корпоративно събитие",
-      "Културно или обществено събитие",
-    ],
-    customOption: "Друго",
-    customPlaceholder: "Напиши какво събитие планираш",
-    max: 5,
-    min: 1,
-  },
-  {
-    key: "service",
-    label: "Ако EventAT стартира утре, коя услуга бихте резервирали първо?",
-    hint: "",
-    placeholder: "Изберете услуга",
-    options: [
-      "DJ и музиканти",
-      "Фотография и видео",
-      "Украса и балони",
-      "Водещи и артисти",
-      "Фотобудки и интерактивни услуги",
-      "Кетъринг и напитки",
-      "Локации",
-    ],
-    customOption: "Друго",
-    customPlaceholder: "Напиши коя услуга би резервирал",
-    max: 5,
-    min: 1,
-  },
-  {
-    key: "source",
-    label: "Как обикновено намирате изпълнители?",
-    hint: "",
-    placeholder: "Изберете източник",
-    options: [
-      "Instagram",
-      "Facebook групи",
-      "Препоръки от приятели",
-      "Google",
-      "TikTok",
-      "Агенции за събития",
-    ],
-    customOption: "Друг начин",
-    customPlaceholder: "Напиши как намираш изпълнители",
-    max: 5,
-    min: 1,
-  },
-  {
-    key: "challenge",
-    label: "Кое е най-досадното при организацията на събитие?",
-    hint: "(изберете до 2)",
-    placeholder: "Изберете предизвикателство",
-    options: [
-      "Намирането на подходящи изпълнители",
-      "Сравняването на оферти",
-      "Липсата на свободни дати",
-      "Комуникацията с различни доставчици",
-      "Координацията в деня на събитието",
-      "Не знам откъде да започна",
-      "Липсата на вдъхновение и идеи",
-    ],
-    max: 2,
-    min: 0,
-  },
-];
-
-const OFFER_CHECKBOX_GROUPS: CheckboxGroupDef[] = [
-  {
-    key: "offerServices",
-    label: "Какви услуги предлагате?",
-    hint: "",
-    placeholder: "Изберете услуга",
-    options: [
-      "DJ и музиканти",
-      "Народни танци и артисти",
-      "Фотография и видео",
-      "Фотобудки и интерактивни услуги",
-      "Украса и балони",
-      "Кетъринг и напитки",
-      "Локации",
-    ],
-    customOption: "Друго",
-    customPlaceholder: "Напиши каква услуга предлагаш",
-    max: 5,
-    min: 1,
-  },
-  {
-    key: "offerDiscovery",
-    label: "Как клиентите най-често откриват вашите услуги?",
-    hint: "",
-    placeholder: "Изберете опция",
-    options: [
-      "Instagram",
-      "Facebook",
-      "Google",
-      "Препоръки",
-      "Собствен уебсайт",
-    ],
-    customOption: "Друго",
-    customPlaceholder: "Напиши как те откриват клиентите",
-    max: 5,
-    min: 1,
-  },
-  {
-    key: "offerCities",
-    label: "В кои градове предлагате услугите си?",
-    hint: "",
-    placeholder: "Изберете град",
-    options: [
-      "София",
-      "Пловдив",
-      "Варна",
-      "Бургас",
-      "Русе",
-      "Стара Загора",
-      "Велико Търново",
-      "Плевен",
-      "Цялата страна",
-    ],
-    customOption: "Друг",
-    customPlaceholder: "Напиши в кой град предлагаш услугите си",
-    max: 10,
-    min: 1,
-  },
-];
 
 const TAB_ACTIVE_CLASSES =
   "h-[42px] flex-1 cursor-default rounded-[9px] bg-white text-[14px] font-bold italic text-plum drop-shadow-[0px_4px_5px_rgba(102,77,146,0.08)]";
@@ -361,6 +218,10 @@ export default function JoinCta({
   const [optIn, setOptIn] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  // Скрито поле за ботове — реалните потребители го оставят празно.
+  const [company, setCompany] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const activeGroups =
     activeTab === "plan" ? PLAN_CHECKBOX_GROUPS : OFFER_CHECKBOX_GROUPS;
@@ -452,12 +313,43 @@ export default function JoinCta({
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitAttempted(true);
-    if (!isValid) return;
+    if (!isValid || isSubmitting) return;
 
-    // GTM: тригер "CE - generate_lead" (контейнер GTM-5RDG9GVR).
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    let result: Awaited<ReturnType<typeof submitJoinCta>>;
+    try {
+      result = await submitJoinCta({
+        side: activeTab,
+        name,
+        email,
+        website,
+        optIn,
+        selections,
+        customTexts,
+        honeypot: company,
+      });
+    } catch {
+      setSubmitError(
+        "Записването не можа да бъде изпратено. Моля, опитай отново.",
+      );
+      setIsSubmitting(false);
+      return;
+    }
+
+    setIsSubmitting(false);
+
+    if (!result.ok) {
+      setSubmitError(result.error);
+      return;
+    }
+
+    // GTM събитието тръгва само след потвърден запис в Payload.
+    // Тригер "CE - generate_lead" (контейнер GTM-5RDG9GVR).
     pushEvent({
       event: "generate_lead",
       form_id: "waitlist",
@@ -579,6 +471,24 @@ export default function JoinCta({
               </div>
             ) : (
               <>
+            {/*
+              Honeypot: скрито за хора (visually-hidden, извън tab flow и
+              скрито за екранни четци), но видимо за автоматични ботове.
+              Ако бъде попълнено, записът се отхвърля тихо.
+            */}
+            <div className="sr-only" aria-hidden="true">
+              <label htmlFor="joincta-company">Фирма</label>
+              <input
+                id="joincta-company"
+                name="company"
+                type="text"
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
+
             <div className="mt-[15px] flex rounded-[12px] bg-[#f4eff5] p-[4px]" role="tablist">
               <button
                 type="button"
@@ -679,12 +589,16 @@ export default function JoinCta({
 
             <button
               type="submit"
-              aria-disabled={!isValid}
+              disabled={isSubmitting}
+              aria-disabled={!isValid || isSubmitting}
+              aria-busy={isSubmitting}
               className={`mt-[33px] h-[47px] w-full rounded-[12px] bg-violet text-[16px] font-bold italic text-white drop-shadow-[0px_6px_9px_rgba(127,100,174,0.35)] transition-all ${
-                isValid ? "hover:bg-plum" : "cursor-not-allowed opacity-45"
+                isValid && !isSubmitting
+                  ? "hover:bg-plum"
+                  : "cursor-not-allowed opacity-45"
               }`}
             >
-              {c.submitLabel}
+              {isSubmitting ? "Изпращане…" : c.submitLabel}
             </button>
             {!isValid && submitAttempted && (
               <p
@@ -692,6 +606,15 @@ export default function JoinCta({
                 style={{ color: ERROR_COLOR }}
               >
                 Моля, попълни оцветените в червено полета, за да се запишеш.
+              </p>
+            )}
+            {submitError && (
+              <p
+                role="alert"
+                className="mt-[8px] text-center text-[12px] leading-[16px]"
+                style={{ color: ERROR_COLOR }}
+              >
+                {submitError}
               </p>
             )}
             <p className="mt-[10px] text-center text-[12px] leading-[18.6px] text-muted">
