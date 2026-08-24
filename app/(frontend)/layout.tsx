@@ -57,17 +57,28 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
+/** Заглавие в таба на браузъра и в резултатите на Google. */
 const TITLE = "EventAT — Планирай своето събитие";
 const DESCRIPTION =
   "Резервирай проверени изпълнители за сватби, рождени дни и корпоративни събития със сигурни плащания през платформата.";
+
+/**
+ * Текстове за споделяне. Заглавието повтаря надписа върху самата картинка,
+ * а описанието е кратко (под 120 знака), за да не се отрязва във Facebook,
+ * Messenger, Viber и LinkedIn.
+ */
+const SHARE_TITLE = "Твоето следващо незабравимо събитие започва тук";
+const SHARE_DESCRIPTION =
+  "DJ-и, фотографи, декорация и кетъринг на едно място. Проверени изпълнители и сигурни плащания през EventAT.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: TITLE,
   description: DESCRIPTION,
   openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
+    title: SHARE_TITLE,
+    description: SHARE_DESCRIPTION,
     url: SITE_URL,
     siteName: "EventAT",
     locale: "bg_BG",
@@ -83,8 +94,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: TITLE,
-    description: DESCRIPTION,
+    title: SHARE_TITLE,
+    description: SHARE_DESCRIPTION,
     images: ["/og-image.jpg"],
   },
 };
