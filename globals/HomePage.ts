@@ -357,6 +357,23 @@ export const HomePage: GlobalConfig = {
                       ],
                     },
                     {
+                      type: "row",
+                      fields: [
+                        {
+                          name: "socialLabel",
+                          type: "text",
+                          label: "Социална мрежа — надпис",
+                          admin: { width: "50%" },
+                        },
+                        {
+                          name: "socialPlaceholder",
+                          type: "text",
+                          label: "Социална мрежа — примерен текст",
+                          admin: { width: "50%" },
+                        },
+                      ],
+                    },
+                    {
                       name: "optInLabel",
                       type: "textarea",
                       label: "Текст до отметката за ранен достъп",

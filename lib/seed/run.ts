@@ -62,7 +62,34 @@ async function ensureMedia(
  * Версия на началното съдържание. Увеличава се, когато се добавят НОВИ полета,
  * които трябва да получат стойност в вече засети Globals.
  */
-const SEED_VERSION = 2;
+const SEED_VERSION = 3;
+
+type GlobalSlug =
+  | "site-settings"
+  | "header"
+  | "footer"
+  | "home-page"
+  | "services-page"
+  | "contacts-page";
+
+/**
+ * Точкови допълнения след версия 2: само ключовете, добавени в съответната
+ * версия. Така поле, което клиентът умишлено е изчистил, не се попълва
+ * отново при следващо вдигане на версията.
+ */
+const VERSION_BACKFILLS: Record<
+  number,
+  Partial<Record<GlobalSlug, Record<string, unknown>>>
+> = {
+  3: {
+    "home-page": {
+      joinCta: {
+        socialLabel: HOME_DEFAULTS.joinCta.socialLabel,
+        socialPlaceholder: HOME_DEFAULTS.joinCta.socialPlaceholder,
+      },
+    },
+  },
+};
 
 const isEmpty = (value: unknown): boolean =>
   value === null ||
@@ -101,9 +128,59 @@ function fillMissing(
   return out;
 }
 
+const isPlainObject = (value: unknown): value is Record<string, unknown> =>
+  value !== null && typeof value === "object" && !Array.isArray(value);
+
+/**
+ * Копие на existing, в което са попълнени САМО празните ключове от patch.
+ * Всички останали стойности в засегнатите групи се запазват непроменени.
+ */
+function withBackfill(
+  existing: unknown,
+  patch: Record<string, unknown>,
+): Record<string, unknown> {
+  const base = isPlainObject(existing) ? existing : {};
+  const out: Record<string, unknown> = { ...base };
+
+  for (const [key, fallback] of Object.entries(patch)) {
+    if (isPlainObject(fallback)) {
+      out[key] = withBackfill(base[key], fallback);
+    } else if (isEmpty(base[key])) {
+      out[key] = fallback;
+    }
+  }
+
+  return out;
+}
+
+/** Събира точковите допълнения за всички версии след `fromVersion`. */
+function versionBackfill(
+  slug: GlobalSlug,
+  current: Record<string, unknown>,
+  fromVersion: number,
+): Record<string, unknown> {
+  const next: Record<string, unknown> = {};
+
+  for (let v = fromVersion + 1; v <= SEED_VERSION; v++) {
+    const patch = VERSION_BACKFILLS[v]?.[slug];
+    if (!patch) continue;
+
+    for (const [key, value] of Object.entries(patch)) {
+      const base = key in next ? next[key] : current[key];
+      if (isPlainObject(value)) {
+        next[key] = withBackfill(base, value);
+      } else if (isEmpty(base)) {
+        next[key] = value;
+      }
+    }
+  }
+
+  return next;
+}
+
 async function seedGlobal(
   payload: Payload,
-  slug: "site-settings" | "header" | "footer" | "home-page" | "services-page" | "contacts-page",
+  slug: GlobalSlug,
   data: Record<string, unknown>,
 ): Promise<"seeded" | "backfilled" | "skipped"> {
   const current = (await payload.findGlobal({
@@ -123,12 +200,18 @@ async function seedGlobal(
   }
 
   // Добавени са нови полета след предишния seed — попълваме САМО празните.
+  // От версия 2 нататък допълваме единствено новодобавените ключове.
   const version = Number(current.seedVersion ?? 1);
   if (version < SEED_VERSION) {
+    const backfill =
+      version < 2
+        ? fillMissing(current, data)
+        : versionBackfill(slug, current, version);
+
     await payload.updateGlobal({
       slug,
       data: {
-        ...fillMissing(current, data),
+        ...backfill,
         seeded: true,
         seedVersion: SEED_VERSION,
       },

@@ -52,6 +52,15 @@ export const ServiceProviderSubmissions: CollectionConfig = {
       label: "Уебсайт",
       admin: { description: "Полето не е задължително във формата." },
     },
+    {
+      name: "socialProfile",
+      type: "text",
+      label: "Социална мрежа",
+      admin: {
+        description:
+          "Facebook, Instagram или TikTok профил. Полето не е задължително във формата.",
+      },
+    },
     ...OFFER_CHECKBOX_GROUPS.flatMap(questionFields),
     ...systemFields([
       { value: "new", label: "Ново" },
