@@ -22,9 +22,9 @@ const SPARKLES = [
 const ERROR_COLOR = "#c0455e";
 
 const TAB_ACTIVE_CLASSES =
-  "h-[42px] flex-1 cursor-default rounded-[9px] bg-white text-[14px] font-bold italic text-plum drop-shadow-[0px_4px_5px_rgba(102,77,146,0.08)]";
+  "h-[42px] min-w-0 flex-1 cursor-default whitespace-nowrap rounded-[9px] bg-white px-[4px] text-[12px] font-bold italic text-plum drop-shadow-[0px_4px_5px_rgba(102,77,146,0.08)] min-[360px]:text-[13px] min-[400px]:text-[14px]";
 const TAB_INACTIVE_CLASSES =
-  "h-[42px] flex-1 rounded-[9px] text-[14px] text-muted transition-colors hover:text-plum";
+  "h-[42px] min-w-0 flex-1 whitespace-nowrap rounded-[9px] px-[4px] text-[12px] text-muted min-[360px]:text-[13px] min-[400px]:text-[14px]";
 
 const inputClasses = (hasError: boolean) =>
   `mt-[6px] h-[49px] w-full rounded-[10px] border px-[14px] font-serif text-[14px] text-ink placeholder:text-[#757575] transition-colors focus:outline-none ${
@@ -162,7 +162,7 @@ function CheckboxDropdown({
                     } ${
                       blocked
                         ? "cursor-not-allowed opacity-45"
-                        : "cursor-pointer hover:bg-[#f4eff5] hover:text-plum"
+                        : "fx-check fx-option cursor-pointer"
                     }`}
                   >
                     <input
@@ -401,8 +401,8 @@ export default function JoinCta({
         ))}
       </div>
 
-      <div className="relative mx-auto flex w-full max-w-[600px] flex-col gap-[48px] px-[24px] py-[64px] lg:max-w-[1180px] lg:flex-row lg:justify-between lg:gap-[48px] lg:pt-[104px] lg:pb-[104px]">
-        <div className="lg:mt-[253px] lg:max-w-[549px] lg:flex-1">
+      <div className="relative mx-auto flex w-full max-w-[600px] flex-col gap-[40px] px-[16px] py-[56px] sm:gap-[48px] sm:px-[24px] sm:py-[64px] lg:max-w-[1180px] lg:flex-row lg:justify-between lg:gap-[48px] lg:pt-[104px] lg:pb-[104px]">
+        <div className="px-[8px] sm:px-0 lg:mt-[253px] lg:max-w-[549px] lg:flex-1">
           <h2 className="text-[34px] leading-[44px] tracking-[-0.8px] text-white lg:text-[40px] lg:leading-[50px] xl:whitespace-nowrap xl:text-[48px] xl:leading-[57.24px] xl:tracking-[-1.08px]">
             {c.headingPrefix}{" "}
             <span
@@ -452,7 +452,7 @@ export default function JoinCta({
           <form
             onSubmit={handleSubmit}
             noValidate
-            className="relative w-full rounded-[22px] border border-white/20 bg-white p-[24px] drop-shadow-[0px_30px_30px_rgba(0,0,0,0.35)] sm:p-[32px] lg:min-h-[767px]"
+            className="relative w-full rounded-[22px] border border-white/20 bg-white p-[16px] drop-shadow-[0px_30px_30px_rgba(0,0,0,0.35)] min-[360px]:p-[20px] sm:p-[32px] lg:min-h-[767px]"
           >
             <p className="pt-[5px] text-[12px] leading-[17px] tracking-[2px] text-plum">
               {c.formEyebrow}
@@ -593,7 +593,7 @@ export default function JoinCta({
             ))}
 
             {activeTab === "plan" && (
-              <label className="mt-[16px] flex cursor-pointer items-start gap-[10px] border-t border-line pt-[14px] text-[14px] leading-[20px] text-muted transition-colors hover:text-plum">
+              <label className="fx-check mt-[16px] flex cursor-pointer items-start gap-[10px] border-t border-line pt-[14px] text-[14px] leading-[20px] text-muted">
                 <input
                   type="checkbox"
                   checked={optIn}
@@ -609,10 +609,10 @@ export default function JoinCta({
               disabled={isSubmitting}
               aria-disabled={!isValid || isSubmitting}
               aria-busy={isSubmitting}
-              className={`mt-[33px] h-[47px] w-full rounded-[12px] bg-violet text-[16px] font-bold italic text-white drop-shadow-[0px_6px_9px_rgba(127,100,174,0.35)] transition-all ${
+              className={`mt-[33px] h-[47px] w-full rounded-[12px] bg-violet text-[16px] font-bold italic text-white drop-shadow-[0px_6px_9px_rgba(127,100,174,0.35)] ${
                 isValid && !isSubmitting
-                  ? "hover:bg-plum"
-                  : "cursor-not-allowed opacity-45"
+                  ? "fx-btn"
+                  : "cursor-not-allowed opacity-45 transition-opacity"
               }`}
             >
               {isSubmitting ? "Изпращане…" : c.submitLabel}

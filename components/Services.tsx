@@ -37,9 +37,9 @@ export default function Services({ heading, services }: ServicesProps) {
           <a
             key={service.slug}
             href={`/uslugi/${service.slug}`}
-            className="overflow-hidden rounded-[18px] border border-line bg-white shadow-[0px_6px_18px_0px_rgba(102,77,146,0.06)] transition-all duration-200 hover:-translate-y-[3px] hover:shadow-[0px_12px_28px_0px_rgba(102,77,146,0.14)]"
+            className="fx-card overflow-hidden rounded-[18px] border border-line bg-white shadow-[0px_6px_18px_0px_rgba(102,77,146,0.06)]"
           >
-            <div className="h-[271.5px] w-full overflow-hidden">
+            <div className="fx-card-media h-[230px] w-full overflow-hidden sm:h-[271.5px]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 alt={service.title}
@@ -48,7 +48,7 @@ export default function Services({ heading, services }: ServicesProps) {
               />
             </div>
             <div className="flex h-[68px] flex-col justify-center gap-[2px] px-[16px]">
-              <h3 className="text-[20px] font-bold italic leading-[19.5px] text-ink">
+              <h3 className="fx-card-title text-[20px] font-bold italic leading-[19.5px] text-ink">
                 {service.title}
               </h3>
               <p className="text-[14px] leading-[18.6px] text-muted">

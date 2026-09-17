@@ -62,7 +62,7 @@ export default async function ServicePage({ params }: PageProps) {
           <nav className="text-[13px] leading-[20px] text-muted">
             <a
               href={page.secondaryCtaHref}
-              className="transition-colors hover:text-plum"
+              className="fx-link"
             >
               {page.breadcrumbLabel}
             </a>
@@ -87,13 +87,13 @@ export default async function ServicePage({ params }: PageProps) {
               <div className="mt-[28px] flex flex-col gap-[12px] sm:flex-row">
                 <a
                   href={page.primaryCtaHref}
-                  className="flex h-[50px] w-full max-w-[280px] items-center justify-center rounded-[12px] bg-violet px-[24px] text-[15px] font-bold italic text-white drop-shadow-[0px_6px_9px_rgba(127,100,174,0.35)] transition-colors hover:bg-plum sm:w-auto"
+                  className="fx-btn flex h-[50px] w-full items-center justify-center rounded-[12px] bg-violet px-[24px] text-[15px] font-bold italic text-white drop-shadow-[0px_6px_9px_rgba(127,100,174,0.35)] sm:w-auto"
                 >
                   {page.primaryCtaLabel}
                 </a>
                 <a
                   href={page.secondaryCtaHref}
-                  className="flex h-[50px] w-full max-w-[280px] items-center justify-center rounded-[12px] border border-line bg-white px-[24px] text-[15px] font-bold italic text-plum transition-colors hover:bg-[#f3edf8] sm:w-auto"
+                  className="fx-btn-soft flex h-[50px] w-full items-center justify-center rounded-[12px] border border-line bg-white px-[24px] text-[15px] font-bold italic text-plum sm:w-auto"
                 >
                   {page.secondaryCtaLabel}
                 </a>
@@ -162,7 +162,7 @@ export default async function ServicePage({ params }: PageProps) {
           </div>
 
           <div
-            className="mt-[40px] overflow-hidden rounded-[22px] px-[32px] py-[40px] text-center"
+            className="mt-[40px] overflow-hidden rounded-[22px] px-[20px] py-[36px] text-center sm:px-[32px] sm:py-[40px]"
             style={{
               backgroundImage:
                 "linear-gradient(145.36deg, #1f1633 0%, #3a2a64 50%, #1f1633 100%)",
@@ -177,7 +177,7 @@ export default async function ServicePage({ params }: PageProps) {
             </p>
             <a
               href={service.ctaButtonHref || page.bottomCtaButtonHref}
-              className="mt-[24px] inline-flex h-[50px] items-center justify-center rounded-[12px] bg-white px-[28px] text-[15px] font-bold italic text-plum transition-colors hover:bg-[#f3edf8]"
+              className="fx-btn-soft mt-[24px] inline-flex h-[50px] w-full items-center justify-center rounded-[12px] bg-white px-[28px] sm:w-auto text-[15px] font-bold italic text-plum [--fx-shadow:var(--color-blush)]"
             >
               {service.ctaButtonLabel || page.bottomCtaButtonLabel}
             </a>

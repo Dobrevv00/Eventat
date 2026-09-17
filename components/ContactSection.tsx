@@ -144,7 +144,7 @@ export default function ContactSection({
               </p>
               <a
                 href={`mailto:${contactEmail}`}
-                className="mt-[6px] inline-block text-[15px] leading-[22px] text-plum transition-colors hover:text-violet"
+                className="fx-text-link mt-[6px] inline-block text-[15px] leading-[22px] text-plum"
               >
                 {contactEmail}
               </a>
@@ -246,10 +246,10 @@ export default function ContactSection({
                   disabled={isSubmitting}
                   aria-disabled={!isValid || isSubmitting}
                   aria-busy={isSubmitting}
-                  className={`mt-[24px] h-[47px] w-full rounded-[12px] bg-violet text-[16px] font-bold italic text-white drop-shadow-[0px_6px_9px_rgba(127,100,174,0.35)] transition-all ${
+                  className={`mt-[24px] h-[47px] w-full rounded-[12px] bg-violet text-[16px] font-bold italic text-white drop-shadow-[0px_6px_9px_rgba(127,100,174,0.35)] ${
                     isValid && !isSubmitting
-                      ? "hover:bg-plum"
-                      : "cursor-not-allowed opacity-45"
+                      ? "fx-btn"
+                      : "cursor-not-allowed opacity-45 transition-opacity"
                   }`}
                 >
                   {isSubmitting ? "Изпращане…" : c.submitLabel}

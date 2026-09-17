@@ -100,7 +100,7 @@ export default async function PoveritelnostPage() {
               Имейл за контакт:{" "}
               <a
                 href="mailto:hello.eventat@gmail.com"
-                className="text-plum underline transition-colors hover:text-violet"
+                className="fx-text-link text-plum underline"
               >
                 hello.eventat@gmail.com
               </a>
@@ -158,14 +158,14 @@ export default async function PoveritelnostPage() {
             ще намериш в{" "}
             <a
               href="/politika-biskvitki"
-              className="text-plum underline transition-colors hover:text-violet"
+              className="fx-text-link text-plum underline"
             >
               Политиката за бисквитки
             </a>
             . Можеш да промениш избора си по всяко време.
           </Paragraph>
           <div className="mt-[16px]">
-            <CookieSettingsButton className="inline-flex h-[46px] items-center justify-center rounded-[12px] bg-violet px-[22px] text-[14px] font-bold italic text-white drop-shadow-[0px_6px_9px_rgba(127,100,174,0.35)] transition-colors hover:bg-plum">
+            <CookieSettingsButton className="fx-btn inline-flex h-[46px] items-center justify-center rounded-[12px] bg-violet px-[22px] text-[14px] font-bold italic text-white drop-shadow-[0px_6px_9px_rgba(127,100,174,0.35)]">
               Настройки за бисквитки
             </CookieSettingsButton>
           </div>
@@ -202,7 +202,7 @@ export default async function PoveritelnostPage() {
             За да упражниш някое от тези права, пиши ни на{" "}
             <a
               href="mailto:hello.eventat@gmail.com"
-              className="text-plum underline transition-colors hover:text-violet"
+              className="fx-text-link text-plum underline"
             >
               hello.eventat@gmail.com
             </a>
@@ -228,7 +228,7 @@ export default async function PoveritelnostPage() {
             данни се свържи с нас на{" "}
             <a
               href="mailto:hello.eventat@gmail.com"
-              className="text-plum underline transition-colors hover:text-violet"
+              className="fx-text-link text-plum underline"
             >
               hello.eventat@gmail.com
             </a>{" "}

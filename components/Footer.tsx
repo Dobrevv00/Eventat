@@ -26,12 +26,12 @@ export default function Footer({
             <a
               key={link.label}
               href={link.href}
-              className="transition-colors hover:text-plum"
+              className="fx-link"
             >
               {link.label}
             </a>
           ))}
-          <CookieSettingsButton className="transition-colors hover:text-plum">
+          <CookieSettingsButton className="fx-link">
             {c.cookieSettingsLabel}
           </CookieSettingsButton>
         </nav>

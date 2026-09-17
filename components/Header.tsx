@@ -13,11 +13,23 @@ function Logo({
   subtext?: string;
 }) {
   return (
-    <a href="/" className="group relative block font-noto leading-none">
-      <p className="text-[27.68px] font-bold tracking-[1.26px] text-plum transition-colors duration-200 group-hover:text-violet">
-        {text}
+    <a href="/" className="fx-logo relative block font-noto leading-none">
+      <p className="text-[27.68px] font-bold tracking-[1.26px] text-plum">
+        <span className="sr-only">{text}</span>
+        {/* Отделни букви, за да подскачат на вълна при hover. */}
+        <span aria-hidden="true">
+          {Array.from(text).map((char, i) => (
+            <span
+              key={i}
+              className="fx-logo-char"
+              style={{ "--i": i } as React.CSSProperties}
+            >
+              {char === " " ? " " : char}
+            </span>
+          ))}
+        </span>
       </p>
-      <p className="mt-[2.5px] ml-[1.3px] text-[8.93px] tracking-[3.15px] text-lilac transition-colors duration-200 group-hover:text-violet">
+      <p className="fx-logo-sub mt-[2.5px] ml-[1.3px] text-[8.93px] tracking-[3.15px] text-lilac">
         {subtext}
       </p>
     </a>
@@ -49,7 +61,7 @@ export default function Header({ content }: { content?: HeaderContent }) {
               key={item.label}
               href={item.href}
               onClick={() => handleNavClick(item.href)}
-              className="relative whitespace-nowrap py-[4px] transition-colors after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:rounded-full after:bg-violet after:transition-all after:duration-300 hover:text-plum hover:after:w-full"
+              className="fx-link whitespace-nowrap py-[4px]"
             >
               {item.label}
             </a>
@@ -59,7 +71,7 @@ export default function Header({ content }: { content?: HeaderContent }) {
           {c.showFavorites !== false && (
             <button
               aria-label="Любими"
-              className="size-[32px] rounded-[8.4px] border-[0.84px] border-line text-center font-sans text-[13.45px] text-plum transition-colors hover:border-lilac hover:bg-[#f4eff5]"
+              className="fx-icon fx-heart size-[32px] rounded-[8.4px] border-[0.84px] border-line text-center font-sans text-[13.45px] text-plum"
             >
               ♡
             </button>
@@ -67,7 +79,7 @@ export default function Header({ content }: { content?: HeaderContent }) {
           <a
             href={c.ctaHref}
             onClick={() => handleNavClick(c.ctaHref)}
-            className="hidden h-[40px] items-center justify-center rounded-[10px] bg-violet px-[19px] font-jakarta text-[11.77px] font-semibold text-white drop-shadow-[0px_5px_7.6px_rgba(127,100,174,0.35)] transition-colors hover:bg-plum sm:flex"
+            className="fx-btn hidden h-[40px] items-center justify-center rounded-[10px] bg-violet px-[19px] font-jakarta text-[11.77px] font-semibold text-white drop-shadow-[0px_5px_7.6px_rgba(127,100,174,0.35)] sm:flex"
           >
             {c.ctaLabel}
           </a>
@@ -75,7 +87,7 @@ export default function Header({ content }: { content?: HeaderContent }) {
             aria-label="Меню"
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((open) => !open)}
-            className="size-[32px] rounded-[8.4px] text-center font-sans text-[16.8px] text-plum transition-colors hover:bg-[#f4eff5] lg:hidden"
+            className="fx-icon size-[32px] rounded-[8.4px] text-center font-sans text-[16.8px] text-plum lg:hidden"
           >
             ☰
           </button>
@@ -91,7 +103,7 @@ export default function Header({ content }: { content?: HeaderContent }) {
                 setMenuOpen(false);
                 handleNavClick(item.href);
               }}
-              className="rounded-[8px] px-[10px] py-[10px] text-[15px] text-ink transition-colors hover:bg-[#f4eff5] hover:text-plum"
+              className="fx-menu-item rounded-[8px] px-[10px] py-[10px] text-[15px] text-ink"
             >
               {item.label}
             </a>
@@ -102,7 +114,7 @@ export default function Header({ content }: { content?: HeaderContent }) {
               setMenuOpen(false);
               handleNavClick(c.ctaHref);
             }}
-            className="mt-[6px] mb-[8px] flex h-[44px] items-center justify-center rounded-[10px] bg-violet font-jakarta text-[13px] font-semibold text-white transition-colors hover:bg-plum sm:hidden"
+            className="fx-btn mt-[6px] mb-[8px] flex h-[44px] items-center justify-center rounded-[10px] bg-violet font-jakarta text-[13px] font-semibold text-white sm:hidden"
           >
             {c.ctaLabel}
           </a>

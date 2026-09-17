@@ -113,13 +113,13 @@ export default function Hero({ content }: { content?: HomeContent["hero"] }) {
         <div className="mt-[32px] flex w-full flex-col items-center gap-[12px] sm:w-auto sm:flex-row lg:mt-[52px]">
           <a
             href={c.primaryCtaHref}
-            className="flex h-[53px] w-full max-w-[320px] items-center justify-center rounded-[12px] bg-violet text-[15px] font-bold italic text-white transition-colors hover:bg-plum sm:w-[189px]"
+            className="fx-btn flex h-[53px] w-full max-w-[320px] items-center justify-center rounded-[12px] bg-violet text-[15px] font-bold italic text-white sm:w-[189px]"
           >
             {c.primaryCtaLabel}
           </a>
           <a
             href={c.secondaryCtaHref}
-            className="flex h-[53px] w-full max-w-[320px] items-center justify-center rounded-[12px] bg-white text-[15px] font-bold italic text-plum transition-colors hover:bg-[#f3edf8] sm:w-[179px]"
+            className="fx-btn-soft flex h-[53px] w-full max-w-[320px] items-center justify-center rounded-[12px] bg-white text-[15px] font-bold italic text-plum sm:w-[179px]"
           >
             {c.secondaryCtaLabel}
           </a>

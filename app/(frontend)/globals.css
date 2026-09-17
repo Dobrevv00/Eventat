@@ -25,3 +25,447 @@ body {
   color: var(--color-ink);
   font-family: var(--font-serif);
 }
+
+/* ---------------------------------------------------------------------------
+   Hover ефекти — игриви и леко „разчупени“: наклон, твърда изместена сянка,
+   отблясък, маркер и подскачащи букви. Движението се включва само на
+   устройства с истински hover и се изключва при prefers-reduced-motion.
+
+   Класовете са извън @layer, за да имат предимство пред Tailwind utilities
+   (напр. bg-violet, shadow-[...]) само в hover състоянието.
+--------------------------------------------------------------------------- */
+
+@keyframes fx-wobble {
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(-14deg) scale(1.14);
+  }
+  50% {
+    transform: rotate(10deg) scale(1.1);
+  }
+  75% {
+    transform: rotate(-5deg) scale(1.05);
+  }
+}
+
+@keyframes fx-heartbeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(1.2) rotate(-8deg);
+  }
+  40% {
+    transform: scale(0.95);
+  }
+  60% {
+    transform: scale(1.12) rotate(6deg);
+  }
+}
+
+@keyframes fx-logo-hop {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  35% {
+    transform: translateY(-7px) rotate(-10deg);
+  }
+  65% {
+    transform: translateY(1px) rotate(5deg);
+  }
+}
+
+@keyframes fx-sparkle {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(-120deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.3) rotate(20deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* Плътни (виолетови) бутони: отблясък + наклон + розова твърда сянка. */
+.fx-btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.25s ease;
+}
+
+.fx-btn::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: -70%;
+  z-index: -1;
+  width: 45%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.45),
+    transparent
+  );
+  transform: skewX(-22deg);
+  transition: left 0.7s ease;
+  pointer-events: none;
+}
+
+/* Светли бутони: лилав „разлив“ от ъгъла + обратен наклон. */
+.fx-btn-soft {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.25s ease;
+}
+
+.fx-btn-soft::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #efe6f7;
+  clip-path: circle(0% at 0% 100%);
+  transition: clip-path 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+/* Навигационни линкове: наклонен розов маркер зад текста. */
+.fx-link {
+  position: relative;
+  isolation: isolate;
+  display: inline-block;
+  transition:
+    color 0.25s ease,
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.fx-link::after {
+  content: "";
+  position: absolute;
+  right: -5px;
+  bottom: 2px;
+  left: -5px;
+  z-index: -1;
+  height: 45%;
+  border-radius: 3px;
+  background: rgba(235, 191, 219, 0.75);
+  transform: scaleX(0) skewX(-14deg);
+  transform-origin: left center;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+/* Линкове в текст: вълнообразна линия + маркер, който се пълни. */
+.fx-text-link {
+  background-image: linear-gradient(
+    rgba(235, 191, 219, 0.7),
+    rgba(235, 191, 219, 0.7)
+  );
+  background-repeat: no-repeat;
+  background-position: 0 92%;
+  background-size: 0% 40%;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition:
+    background-size 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.25s ease;
+}
+
+/* Иконни бутони (♡, ☰). */
+.fx-icon {
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Карти на услуги: повдигане с наклон, твърда сянка, зуум и стрелка. */
+.fx-card {
+  transition:
+    transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.3s ease;
+}
+
+.fx-card-media {
+  position: relative;
+}
+
+.fx-card-media img {
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fx-card-media::after {
+  content: "→";
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--color-plum);
+  font-size: 19px;
+  font-style: normal;
+  box-shadow: 3px 3px 0 0 var(--color-blush);
+  opacity: 0;
+  transform: scale(0.3) rotate(-200deg);
+  transition:
+    opacity 0.3s ease,
+    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+.fx-card-title {
+  transition: color 0.25s ease;
+}
+
+/* Отметки: чекбоксът подскача; опциите в падащото меню получават и акцент. */
+.fx-check {
+  transition: color 0.2s ease;
+}
+
+.fx-check input {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.fx-option {
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.25s ease,
+    color 0.2s ease;
+}
+
+/* Мобилно меню: плъзгане надясно + стрелка. */
+.fx-menu-item {
+  position: relative;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    padding-left 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.25s ease;
+}
+
+.fx-menu-item::after {
+  content: "→";
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  color: var(--color-violet);
+  opacity: 0;
+  transform: translate(-10px, -50%);
+  transition:
+    opacity 0.25s ease,
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Лого: буквите подскачат на вълна, изскача ✦. */
+.fx-logo-char {
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+
+.fx-logo-sub {
+  transition:
+    color 0.3s ease,
+    transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.fx-logo::after {
+  content: "✦";
+  position: absolute;
+  top: -7px;
+  right: -17px;
+  color: var(--color-blush);
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .fx-btn:hover {
+    background-color: var(--color-plum);
+    transform: translate(-3px, -3px) rotate(-1.5deg);
+    box-shadow: 5px 5px 0 0 #e2a3cb;
+  }
+
+  .fx-btn:hover::before {
+    left: 130%;
+  }
+
+  .fx-btn:active {
+    transform: translate(0, 0) rotate(0deg) scale(0.98);
+    box-shadow: 0 0 0 0 #e2a3cb;
+    transition-duration: 0.1s;
+  }
+
+  .fx-btn-soft:hover {
+    border-color: var(--color-violet);
+    transform: translate(3px, -3px) rotate(1.5deg);
+    box-shadow: -5px 5px 0 0 var(--fx-shadow, var(--color-violet));
+  }
+
+  .fx-btn-soft:hover::before {
+    clip-path: circle(150% at 0% 100%);
+  }
+
+  .fx-btn-soft:active {
+    transform: translate(0, 0) rotate(0deg) scale(0.98);
+    box-shadow: 0 0 0 0 var(--fx-shadow, var(--color-violet));
+    transition-duration: 0.1s;
+  }
+
+  .fx-link:hover {
+    color: var(--color-plum);
+    transform: translateY(-2px) rotate(-2deg);
+  }
+
+  .fx-link:hover::after {
+    transform: scaleX(1) skewX(-14deg);
+  }
+
+  .fx-text-link:hover {
+    color: var(--color-plum);
+    background-size: 100% 40%;
+    text-decoration-line: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: var(--color-violet);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+
+  .fx-icon:hover {
+    color: var(--color-violet);
+    background-color: #f4eff5;
+    border-color: var(--color-lilac);
+    box-shadow: 3px 3px 0 0 var(--color-blush);
+    animation: fx-wobble 0.55s ease both;
+  }
+
+  .fx-heart:hover {
+    animation: fx-heartbeat 0.8s ease both;
+  }
+
+  .fx-card:hover {
+    border-color: var(--color-lilac);
+    transform: translateY(-6px) rotate(-1.2deg);
+    box-shadow: 8px 8px 0 0 var(--color-blush);
+  }
+
+  .fx-card:nth-child(even):hover {
+    transform: translateY(-6px) rotate(1.2deg);
+    box-shadow: -8px 8px 0 0 #d9cbee;
+  }
+
+  .fx-card:hover .fx-card-media img {
+    transform: scale(1.08) rotate(1.5deg);
+  }
+
+  .fx-card:hover .fx-card-media::after {
+    opacity: 1;
+    transform: scale(1) rotate(-45deg);
+  }
+
+  .fx-card:hover .fx-card-title {
+    color: var(--color-plum);
+  }
+
+  .fx-check:hover {
+    color: var(--color-plum);
+  }
+
+  .fx-check:hover input {
+    transform: rotate(-14deg) scale(1.18);
+  }
+
+  .fx-option:hover {
+    background-color: #f4eff5;
+    box-shadow: inset 3px 0 0 0 var(--color-violet);
+  }
+
+  .fx-menu-item:hover {
+    color: var(--color-plum);
+    background-color: #f4eff5;
+    padding-left: 20px;
+    box-shadow: inset 3px 0 0 0 var(--color-violet);
+  }
+
+  .fx-menu-item:hover::after {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+
+  .fx-logo:hover .fx-logo-char {
+    color: var(--color-violet);
+    animation: fx-logo-hop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation-delay: calc(var(--i, 0) * 45ms);
+  }
+
+  .fx-logo:hover .fx-logo-char:nth-child(even) {
+    color: var(--color-lilac);
+  }
+
+  .fx-logo:hover .fx-logo-sub {
+    color: var(--color-violet);
+    transform: translateX(4px);
+  }
+
+  .fx-logo:hover::after {
+    animation: fx-sparkle 0.5s 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-btn,
+  .fx-btn::before,
+  .fx-btn-soft,
+  .fx-btn-soft::before,
+  .fx-link,
+  .fx-link::after,
+  .fx-text-link,
+  .fx-icon,
+  .fx-card,
+  .fx-card-media img,
+  .fx-card-media::after,
+  .fx-check input,
+  .fx-menu-item,
+  .fx-menu-item::after,
+  .fx-logo-char,
+  .fx-logo-sub,
+  .fx-logo::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .fx-btn:hover,
+  .fx-btn-soft:hover,
+  .fx-link:hover,
+  .fx-card:hover,
+  .fx-card:hover .fx-card-media img,
+  .fx-check:hover input,
+  .fx-logo:hover .fx-logo-char,
+  .fx-logo:hover .fx-logo-sub {
+    transform: none !important;
+  }
+}

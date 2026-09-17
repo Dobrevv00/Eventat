@@ -33,7 +33,7 @@ export default function Newsletter({ content }: NewsletterProps) {
             />
             <button
               type="submit"
-              className="h-[49px] w-full rounded-[12px] bg-violet font-sans text-[14px] font-semibold text-white transition-colors hover:bg-plum sm:w-[135px]"
+              className="fx-btn h-[49px] w-full rounded-[12px] bg-violet font-sans text-[14px] font-semibold text-white sm:w-[135px]"
             >
               {c.buttonLabel}
             </button>

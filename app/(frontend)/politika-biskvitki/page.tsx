@@ -104,7 +104,7 @@ export default async function PolitikaBiskvitkiPage() {
             допълва нашата{" "}
             <a
               href="/poveritelnost"
-              className="text-plum underline transition-colors hover:text-violet"
+              className="fx-text-link text-plum underline"
             >
               Политика за поверителност
             </a>
@@ -195,7 +195,7 @@ export default async function PolitikaBiskvitkiPage() {
             изключването на някои бисквитки може да ограничи работата на сайта.
           </Paragraph>
           <div className="mt-[16px]">
-            <CookieSettingsButton className="inline-flex h-[46px] items-center justify-center rounded-[12px] bg-violet px-[22px] text-[14px] font-bold italic text-white drop-shadow-[0px_6px_9px_rgba(127,100,174,0.35)] transition-colors hover:bg-plum">
+            <CookieSettingsButton className="fx-btn inline-flex h-[46px] items-center justify-center rounded-[12px] bg-violet px-[22px] text-[14px] font-bold italic text-white drop-shadow-[0px_6px_9px_rgba(127,100,174,0.35)]">
               Настройки за бисквитки
             </CookieSettingsButton>
           </div>
@@ -213,7 +213,7 @@ export default async function PolitikaBiskvitkiPage() {
             София, кв. „Лозенец", ул. „Свети Наум" №30, на{" "}
             <a
               href="mailto:hello.eventat@gmail.com"
-              className="text-plum underline transition-colors hover:text-violet"
+              className="fx-text-link text-plum underline"
             >
               hello.eventat@gmail.com
             </a>

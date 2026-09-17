@@ -98,7 +98,7 @@ export default async function ObshtiUsloviyaPage() {
               Имейл за контакт:{" "}
               <a
                 href="mailto:hello.eventat@gmail.com"
-                className="text-plum underline transition-colors hover:text-violet"
+                className="fx-text-link text-plum underline"
               >
                 hello.eventat@gmail.com
               </a>
@@ -204,14 +204,14 @@ export default async function ObshtiUsloviyaPage() {
             Обработването на лични данни е описано в{" "}
             <a
               href="/poveritelnost"
-              className="text-plum underline transition-colors hover:text-violet"
+              className="fx-text-link text-plum underline"
             >
               Политиката за поверителност
             </a>
             , а използването на бисквитки — в{" "}
             <a
               href="/politika-biskvitki"
-              className="text-plum underline transition-colors hover:text-violet"
+              className="fx-text-link text-plum underline"
             >
               Политиката за бисквитки
             </a>
@@ -240,7 +240,7 @@ export default async function ObshtiUsloviyaPage() {
             За въпроси относно тези Общи условия ни пиши на{" "}
             <a
               href="mailto:hello.eventat@gmail.com"
-              className="text-plum underline transition-colors hover:text-violet"
+              className="fx-text-link text-plum underline"
             >
               hello.eventat@gmail.com
             </a>{" "}

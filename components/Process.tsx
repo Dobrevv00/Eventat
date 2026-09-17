@@ -24,30 +24,53 @@ export default function Process({ content }: ProcessProps) {
         title={c.title}
         subtitle={c.subtitle}
       />
-      <div className="mx-auto mt-[45px] flex max-w-[420px] flex-col gap-[40px] px-[24px] xl:relative xl:block xl:h-[186px] xl:w-[1158px] xl:max-w-none xl:px-0">
+      {/*
+        Мобилно: вертикална времева линия (номер вляво, текст вдясно).
+        Таблет: 2×2. Desktop (xl): оригиналната хоризонтална композиция.
+      */}
+      <div className="mx-auto mt-[36px] grid max-w-[520px] grid-cols-1 px-[24px] md:mt-[45px] md:max-w-[760px] md:grid-cols-2 md:gap-x-[48px] md:gap-y-[40px] xl:relative xl:block xl:h-[186px] xl:w-[1158px] xl:max-w-none xl:px-0">
         <div className="absolute left-[136px] top-[38px] hidden h-[2px] w-[860px] bg-lilac opacity-50 xl:block" />
-        {steps.map((step, i) => (
-          <div
-            key={step.number}
-            className="flex flex-col items-center xl:absolute xl:top-[8px] xl:w-[291px]"
-            style={{ left: i * 291 - 16 }}
-          >
-            <div className="flex size-[56px] items-center justify-center rounded-full border-2 border-lilac bg-white">
-              <span className="font-noto text-[22px] font-bold text-plum">
-                {step.number}
-              </span>
-            </div>
-            <h3 className="mt-[18px] text-[20px] font-bold italic leading-[27.9px] text-ink">
-              {step.title}
-            </h3>
-            <p
-              className="mt-[8px] max-w-full text-center text-[16px] leading-[18px] text-muted"
-              style={{ width: PROCESS_STEP_WIDTHS[i] ?? 243 }}
+        {steps.map((step, i) => {
+          const isLast = i === steps.length - 1;
+          return (
+            <div
+              key={step.number}
+              className="flex items-stretch gap-[16px] xl:absolute xl:top-[8px] xl:left-(--step-left) xl:w-[291px] xl:flex-col xl:items-center xl:gap-0"
+              style={
+                {
+                  "--step-left": `${i * 291 - 16}px`,
+                  "--step-text-width": `${PROCESS_STEP_WIDTHS[i] ?? 243}px`,
+                } as React.CSSProperties
+              }
             >
-              {step.text}
-            </p>
-          </div>
-        ))}
+              <div className="flex shrink-0 flex-col items-center">
+                <div className="flex size-[48px] items-center justify-center rounded-full border-2 border-lilac bg-white md:size-[56px]">
+                  <span className="font-noto text-[19px] font-bold text-plum md:text-[22px]">
+                    {step.number}
+                  </span>
+                </div>
+                {!isLast && (
+                  <div
+                    aria-hidden
+                    className="my-[6px] min-h-[20px] w-[2px] flex-1 rounded-full bg-lilac opacity-50 md:hidden"
+                  />
+                )}
+              </div>
+              <div
+                className={`min-w-0 flex-1 pt-[10px] md:pt-[14px] xl:flex xl:flex-col xl:items-center xl:pt-0 ${
+                  isLast ? "" : "pb-[22px] md:pb-0"
+                }`}
+              >
+                <h3 className="text-[19px] font-bold italic leading-[26px] text-ink xl:mt-[18px] xl:text-[20px] xl:leading-[27.9px]">
+                  {step.title}
+                </h3>
+                <p className="mt-[4px] text-[15px] leading-[22px] text-muted xl:mt-[8px] xl:w-(--step-text-width) xl:max-w-full xl:text-center xl:text-[16px] xl:leading-[18px]">
+                  {step.text}
+                </p>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

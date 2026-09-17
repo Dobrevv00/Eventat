@@ -61,9 +61,12 @@ function Toggle({
 }
 
 const OUTLINE_BTN =
-  "flex h-[44px] items-center justify-center rounded-[12px] border border-line bg-white px-[18px] text-[14px] font-bold italic text-plum transition-colors hover:bg-[#f4eff5]";
+  "fx-btn-soft flex items-center justify-center rounded-[12px] border border-line bg-white text-[14px] font-bold italic text-plum";
 const SOLID_BTN =
-  "flex h-[44px] items-center justify-center rounded-[12px] bg-violet px-[18px] text-[14px] font-bold italic text-white drop-shadow-[0px_6px_9px_rgba(127,100,174,0.35)] transition-colors hover:bg-plum";
+  "fx-btn flex items-center justify-center rounded-[12px] bg-violet text-[14px] font-bold italic text-white drop-shadow-[0px_6px_9px_rgba(127,100,174,0.35)]";
+const BTN_SIZE = "h-[44px] px-[18px]";
+// В банера на телефон бутоните са по-компактни, за да заемат по-малко екран.
+const BANNER_BTN_SIZE = "h-[42px] px-[10px] sm:h-[44px] sm:px-[18px]";
 
 export default function CookieConsent() {
   const [bannerVisible, setBannerVisible] = useState(false);
@@ -119,45 +122,45 @@ export default function CookieConsent() {
   return (
     <>
       {bannerVisible && !settingsOpen && (
-        <div className="fixed inset-x-0 bottom-0 z-[60] p-[16px] sm:p-[24px]">
-          <div className="mx-auto max-w-[1132px] rounded-[18px] border border-line bg-white/90 p-[20px] shadow-[0px_12px_40px_rgba(31,22,51,0.18)] backdrop-blur-md sm:p-[24px]">
-            <div className="flex flex-col gap-[16px] lg:flex-row lg:items-center lg:justify-between lg:gap-[32px]">
+        <div className="fixed inset-x-0 bottom-0 z-[60] p-[10px] sm:p-[24px]">
+          <div className="mx-auto max-w-[1132px] rounded-[18px] border border-line bg-white/90 p-[16px] shadow-[0px_12px_40px_rgba(31,22,51,0.18)] backdrop-blur-md sm:p-[24px]">
+            <div className="flex flex-col gap-[12px] sm:gap-[16px] lg:flex-row lg:items-center lg:justify-between lg:gap-[32px]">
               <div className="lg:flex-1">
-                <h2 className="text-[18px] font-bold italic text-ink">
+                <h2 className="text-[16px] font-bold italic text-ink sm:text-[18px]">
                   Използваме бисквитки 🍪
                 </h2>
-                <p className="mt-[6px] text-[14px] leading-[21px] text-muted">
+                <p className="mt-[4px] text-[13px] leading-[19px] text-muted sm:mt-[6px] sm:text-[14px] sm:leading-[21px]">
                   Използваме бисквитки, за да работи сайтът и да подобряваме
                   твоето изживяване. Можеш да приемеш всички или сам да избереш
                   кои да позволиш. Виж{" "}
                   <a
                     href="/politika-biskvitki"
-                    className="text-plum underline transition-colors hover:text-violet"
+                    className="fx-text-link text-plum underline"
                   >
                     Политиката за бисквитки
                   </a>
                   .
                 </p>
               </div>
-              <div className="flex flex-col gap-[10px] sm:flex-row lg:shrink-0">
+              <div className="grid grid-cols-2 gap-[8px] sm:flex sm:flex-row sm:gap-[10px] lg:shrink-0">
                 <button
                   type="button"
                   onClick={() => setSettingsOpen(true)}
-                  className={OUTLINE_BTN}
+                  className={`${OUTLINE_BTN} ${BANNER_BTN_SIZE}`}
                 >
                   Настройки
                 </button>
                 <button
                   type="button"
                   onClick={() => persist(false, false)}
-                  className={OUTLINE_BTN}
+                  className={`${OUTLINE_BTN} ${BANNER_BTN_SIZE}`}
                 >
                   Само необходими
                 </button>
                 <button
                   type="button"
                   onClick={() => persist(true, true)}
-                  className={SOLID_BTN}
+                  className={`${SOLID_BTN} ${BANNER_BTN_SIZE} col-span-2`}
                 >
                   Приемам всички
                 </button>
@@ -220,21 +223,21 @@ export default function CookieConsent() {
               <button
                 type="button"
                 onClick={() => persist(false, false)}
-                className={`${OUTLINE_BTN} sm:flex-1`}
+                className={`${OUTLINE_BTN} ${BTN_SIZE} sm:flex-1`}
               >
                 Само необходими
               </button>
               <button
                 type="button"
                 onClick={() => persist(analytics, marketing)}
-                className={`${OUTLINE_BTN} sm:flex-1`}
+                className={`${OUTLINE_BTN} ${BTN_SIZE} sm:flex-1`}
               >
                 Запази избора
               </button>
               <button
                 type="button"
                 onClick={() => persist(true, true)}
-                className={`${SOLID_BTN} sm:flex-1`}
+                className={`${SOLID_BTN} ${BTN_SIZE} sm:flex-1`}
               >
                 Приемам всички
               </button>
