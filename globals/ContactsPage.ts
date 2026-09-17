@@ -1,5 +1,7 @@
 import type { Access, GlobalConfig } from "payload";
 
+import { revalidateGlobalAfterChange } from "../lib/revalidate";
+
 const authenticated: Access = ({ req }) => Boolean(req.user);
 
 export const ContactsPage: GlobalConfig = {
@@ -9,6 +11,9 @@ export const ContactsPage: GlobalConfig = {
     group: "Страници",
     description:
       "Текстовете на страница /kontakti. Адресът и имейлът се вземат от „Настройки на сайта“.",
+  },
+  hooks: {
+    afterChange: [revalidateGlobalAfterChange],
   },
   access: {
     read: () => true,

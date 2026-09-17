@@ -47,6 +47,10 @@ export default function WhyUs({ content }: WhyUsProps) {
                   FEATURE_ICONS[feature.icon ?? ""] ??
                   FEATURE_ICONS.payments
                 }
+                width={32}
+                height={32}
+                loading="lazy"
+                decoding="async"
                 className="size-[24px] sm:size-[32px]"
               />
             </div>

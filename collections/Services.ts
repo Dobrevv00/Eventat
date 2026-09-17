@@ -1,5 +1,10 @@
 import type { Access, CollectionConfig } from "payload";
 
+import {
+  revalidateCollectionAfterChange,
+  revalidateCollectionAfterDelete,
+} from "../lib/revalidate";
+
 const authenticated: Access = ({ req }) => Boolean(req.user);
 
 /**
@@ -19,6 +24,10 @@ export const Services: CollectionConfig = {
     defaultColumns: ["title", "slug", "order", "active"],
     description:
       "Услугите се показват в секция „Услуги“ на главната страница и имат собствена страница.",
+  },
+  hooks: {
+    afterChange: [revalidateCollectionAfterChange],
+    afterDelete: [revalidateCollectionAfterDelete],
   },
   access: {
     read: () => true,

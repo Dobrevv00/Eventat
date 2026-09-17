@@ -36,11 +36,20 @@ export const FOOTER_DEFAULTS = {
   copyright: "© 2026 EventAT. Всички права запазени.",
 };
 
-export const SITE_SETTINGS_DEFAULTS = {
-  siteName: "EventAT",
+/** Предишните стойности — заменят се в CMS само ако никой не ги е редактирал. */
+export const LEGACY_SEO_DEFAULTS = {
   metaTitle: "EventAT — Планирай своето събитие",
   metaDescription:
     "Резервирай проверени изпълнители за сватби, рождени дни и корпоративни събития със сигурни плащания през платформата.",
+  servicesSecondaryCtaHref: "/#uslugi",
+};
+
+export const SITE_SETTINGS_DEFAULTS = {
+  siteName: "EventAT",
+  // До ~60 знака за заглавие и ~155 за описание — толкова показва Google.
+  metaTitle: "EventAT — Изпълнители за сватби, рождени дни и събития",
+  metaDescription:
+    "Намери и резервирай проверени DJ-и, музиканти, фотографи, декорация и кетъринг за сватби, рождени дни и корпоративни събития. Сигурни плащания през EventAT.",
   contactEmail: "hello.eventat@gmail.com",
   contactAddress: "гр. София, бул. Свети Наум 30, етаж 5",
 };
@@ -175,7 +184,7 @@ export const SERVICES_PAGE_DEFAULTS = {
   primaryCtaLabel: "Планирам събитие",
   primaryCtaHref: "/#form-plan",
   secondaryCtaLabel: "Всички услуги",
-  secondaryCtaHref: "/#uslugi",
+  secondaryCtaHref: "/uslugi",
   includesEyebrow: "КАКВО ВКЛЮЧВА",
   includesTitlePrefix: "Всичко за",
   whyEyebrow: "ЗАЩО ПРЕЗ EVENTAT",

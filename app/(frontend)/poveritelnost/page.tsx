@@ -2,13 +2,16 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getFooterContent, getHeaderContent } from "@/lib/content";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumbJsonLd, jsonLdGraph, pageMetadata } from "@/lib/seo";
 import CookieSettingsButton from "@/components/CookieSettingsButton";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Политика за поверителност — EventAT",
   description:
     "Как EventAT (ЧЕРИ ЕСТЕЙТ ЕООД) събира, използва и защитава личните ти данни.",
-};
+  path: "/poveritelnost",
+});
 
 const LAST_UPDATED = "20 август 2026 г.";
 
@@ -50,6 +53,14 @@ export default async function PoveritelnostPage() {
 
   return (
     <main className="flex min-h-screen flex-col overflow-x-clip bg-white">
+      <JsonLd
+        data={jsonLdGraph(
+          breadcrumbJsonLd([
+            { name: "Начало", path: "/" },
+            { name: "Политика за поверителност", path: "/poveritelnost" },
+          ]),
+        )}
+      />
       <Header content={header} />
 
       <section

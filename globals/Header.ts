@@ -1,5 +1,7 @@
 import type { Access, GlobalConfig } from "payload";
 
+import { revalidateGlobalAfterChange } from "../lib/revalidate";
+
 const authenticated: Access = ({ req }) => Boolean(req.user);
 
 /**
@@ -12,6 +14,9 @@ export const Header: GlobalConfig = {
   admin: {
     group: "Настройки",
     description: "Горната лента на сайта — лого, меню и бутон.",
+  },
+  hooks: {
+    afterChange: [revalidateGlobalAfterChange],
   },
   access: {
     read: () => true,

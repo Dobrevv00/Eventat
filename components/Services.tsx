@@ -6,6 +6,8 @@ import { SERVICES as STATIC_SERVICES } from "@/lib/services";
 type ServicesProps = {
   heading?: { eyebrow: string; title: string; subtitle: string };
   services?: ServiceContent[];
+  /** На страница „Услуги“ заглавието е h1 в hero секцията. */
+  showHeading?: boolean;
 };
 
 const FALLBACK_SERVICES: ServiceContent[] = STATIC_SERVICES.map((s) => ({
@@ -18,7 +20,11 @@ const FALLBACK_SERVICES: ServiceContent[] = STATIC_SERVICES.map((s) => ({
   highlights: s.highlights,
 }));
 
-export default function Services({ heading, services }: ServicesProps) {
+export default function Services({
+  heading,
+  services,
+  showHeading = true,
+}: ServicesProps) {
   const h = heading ?? HOME_DEFAULTS.servicesSection;
   const items = services?.length ? services : FALLBACK_SERVICES;
 
@@ -27,12 +33,18 @@ export default function Services({ heading, services }: ServicesProps) {
       id="uslugi"
       className="mx-auto mt-[56px] w-full max-w-[1132px] scroll-mt-[88px] px-[24px] lg:px-0"
     >
-      <SectionHeading
-        eyebrow={h.eyebrow}
-        title={h.title}
-        subtitle={h.subtitle}
-      />
-      <div className="mt-[40px] grid grid-cols-1 gap-[20px] sm:grid-cols-2 lg:mt-[64px] lg:grid-cols-3">
+      {showHeading && (
+        <SectionHeading
+          eyebrow={h.eyebrow}
+          title={h.title}
+          subtitle={h.subtitle}
+        />
+      )}
+      <div
+        className={`grid grid-cols-1 gap-[20px] sm:grid-cols-2 lg:grid-cols-3 ${
+          showHeading ? "mt-[40px] lg:mt-[64px]" : ""
+        }`}
+      >
         {items.map((service) => (
           <a
             key={service.slug}
@@ -44,6 +56,10 @@ export default function Services({ heading, services }: ServicesProps) {
               <img
                 alt={service.title}
                 src={service.image}
+                width={814}
+                height={543}
+                loading="lazy"
+                decoding="async"
                 className="size-full object-cover"
               />
             </div>

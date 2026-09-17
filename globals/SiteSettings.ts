@@ -1,5 +1,7 @@
 import type { Access, GlobalConfig } from "payload";
 
+import { revalidateGlobalAfterChange } from "../lib/revalidate";
+
 const authenticated: Access = ({ req }) => Boolean(req.user);
 
 /**
@@ -13,6 +15,9 @@ export const SiteSettings: GlobalConfig = {
     group: "Настройки",
     description:
       "Общи данни за целия сайт. Текстовете по секциите се редактират от „Страници“.",
+  },
+  hooks: {
+    afterChange: [revalidateGlobalAfterChange],
   },
   access: {
     read: () => true,

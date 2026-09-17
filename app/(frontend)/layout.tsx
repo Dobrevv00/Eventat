@@ -1,8 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Noto_Sans, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
 import CookieConsent from "@/components/CookieConsent";
+import { getSiteSettings } from "@/lib/content";
+import { baseMetadata } from "@/lib/seo";
 
 // Единственият tracking код на сайта. GA4 и Meta Pixel се конфигурират
 // като тагове вътре в контейнера, не като отделни снипети тук.
@@ -56,48 +58,16 @@ const jakarta = Plus_Jakarta_Sans({
   weight: ["600"],
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+// Общи стойности по подразбиране (заглавие и описание от „Настройки на
+// сайта → SEO и споделяне“). Всяка страница задава собствени og:url и
+// canonical чрез pageMetadata() — тук нарочно няма url, за да не сочат всички
+// страници към началната.
+export async function generateMetadata(): Promise<Metadata> {
+  return baseMetadata(await getSiteSettings());
+}
 
-/** Заглавие в таба на браузъра и в резултатите на Google. */
-const TITLE = "EventAT — Планирай своето събитие";
-const DESCRIPTION =
-  "Резервирай проверени изпълнители за сватби, рождени дни и корпоративни събития със сигурни плащания през платформата.";
-
-/**
- * Текстове за споделяне. Заглавието повтаря надписа върху самата картинка,
- * а описанието е кратко (под 120 знака), за да не се отрязва във Facebook,
- * Messenger, Viber и LinkedIn.
- */
-const SHARE_TITLE = "Твоето следващо незабравимо събитие започва тук";
-const SHARE_DESCRIPTION =
-  "DJ-и, фотографи, декорация и кетъринг на едно място. Проверени изпълнители и сигурни плащания през EventAT.";
-
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: TITLE,
-  description: DESCRIPTION,
-  openGraph: {
-    title: SHARE_TITLE,
-    description: SHARE_DESCRIPTION,
-    url: SITE_URL,
-    siteName: "EventAT",
-    locale: "bg_BG",
-    type: "website",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "EventAT — Твоето следващо незабравимо събитие започва тук",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: SHARE_TITLE,
-    description: SHARE_DESCRIPTION,
-    images: ["/og-image.jpg"],
-  },
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
 };
 
 export default function RootLayout({
@@ -108,11 +78,14 @@ export default function RootLayout({
   return (
     <html lang="bg" className={`${notoSans.variable} ${jakarta.variable}`}>
       <body className="antialiased">
-        <Script id="consent-mode-defaults" strategy="beforeInteractive">
-          {CONSENT_DEFAULTS}
-        </Script>
-        <Script id="gtm-base" strategy="afterInteractive">
-          {GTM_SNIPPET}
+        {/*
+          Consent defaults и GTM са в ЕДИН скрипт, за да е гарантирано, че
+          defaults се изпълняват преди GTM на всяка страница. beforeInteractive
+          не се изпълняваше, когато React рендерира страницата в браузъра
+          (напр. 404), и GTM тръгваше без Consent Mode.
+        */}
+        <Script id="consent-and-gtm" strategy="afterInteractive">
+          {CONSENT_DEFAULTS + GTM_SNIPPET}
         </Script>
         <noscript>
           <iframe

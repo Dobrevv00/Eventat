@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import JsonLd from "@/components/JsonLd";
 import {
   getFooterContent,
   getHeaderContent,
@@ -9,6 +10,16 @@ import {
   getServices,
   getServicesPageContent,
 } from "@/lib/content";
+import {
+  absoluteUrl,
+  breadcrumbJsonLd,
+  jsonLdGraph,
+  pageMetadata,
+  serviceJsonLd,
+  serviceSeoTitle,
+  trimDescription,
+  webPageJsonLd,
+} from "@/lib/seo";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -25,18 +36,23 @@ export async function generateMetadata({
   const { slug } = await params;
   const service = await getServiceBySlug(slug);
   if (!service) {
-    return { title: "Услугата не е намерена — EventAT" };
+    return { title: "Страницата не е намерена — EventAT" };
   }
-  return {
-    title: service.seoTitle || `${service.title} — EventAT`,
-    description: service.seoDescription || service.intro,
-  };
+  return pageMetadata({
+    title: service.seoTitle || serviceSeoTitle(service.title),
+    description: service.seoDescription || trimDescription(service.intro),
+    path: `/uslugi/${service.slug}`,
+    shareTitle: `${service.title} — EventAT`,
+    shareDescription: trimDescription(service.intro, 150),
+    image: service.image ? { url: service.image, alt: service.title } : undefined,
+  });
 }
 
 export default async function ServicePage({ params }: PageProps) {
   const { slug } = await params;
-  const [service, header, footer, page] = await Promise.all([
+  const [service, services, header, footer, page] = await Promise.all([
     getServiceBySlug(slug),
+    getServices(),
     getHeaderContent(),
     getFooterContent(),
     getServicesPageContent(),
@@ -46,8 +62,37 @@ export default async function ServicePage({ params }: PageProps) {
     notFound();
   }
 
+  const path = `/uslugi/${service.slug}`;
+  const description = service.seoDescription || trimDescription(service.intro);
+  const otherServices = services.filter((s) => s.slug !== service.slug);
+
   return (
     <main className="flex min-h-screen flex-col overflow-x-clip bg-white">
+      <JsonLd
+        data={jsonLdGraph(
+          serviceJsonLd({
+            slug: service.slug,
+            title: service.title,
+            description: service.intro,
+            image: service.image,
+            includes: service.includes,
+          }),
+          webPageJsonLd({
+            path,
+            name: service.seoTitle || serviceSeoTitle(service.title),
+            description,
+            extra: {
+              mainEntity: { "@id": `${absoluteUrl(path)}#service` },
+              ...(service.updatedAt ? { dateModified: service.updatedAt } : {}),
+            },
+          }),
+          breadcrumbJsonLd([
+            { name: "Начало", path: "/" },
+            { name: page.breadcrumbLabel, path: "/uslugi" },
+            { name: service.title, path },
+          ]),
+        )}
+      />
       <Header content={header} />
 
       {/* Hero */}
@@ -59,15 +104,21 @@ export default async function ServicePage({ params }: PageProps) {
         }}
       >
         <div className="mx-auto w-full max-w-[1132px] px-[24px] pt-[40px] pb-[48px]">
-          <nav className="text-[13px] leading-[20px] text-muted">
-            <a
-              href={page.secondaryCtaHref}
-              className="fx-link"
-            >
+          <nav
+            aria-label="Навигация"
+            className="text-[13px] leading-[20px] text-muted"
+          >
+            <a href="/" className="fx-link">
+              Начало
+            </a>
+            <span className="mx-[8px] text-lilac">/</span>
+            <a href="/uslugi" className="fx-link">
               {page.breadcrumbLabel}
             </a>
             <span className="mx-[8px] text-lilac">/</span>
-            <span className="text-ink">{service.title}</span>
+            <span aria-current="page" className="text-ink">
+              {service.title}
+            </span>
           </nav>
 
           <div className="mt-[28px] flex flex-col gap-[28px] lg:flex-row lg:items-center lg:gap-[40px]">
@@ -104,6 +155,10 @@ export default async function ServicePage({ params }: PageProps) {
               <img
                 alt={service.title}
                 src={service.image}
+                width={814}
+                height={543}
+                fetchPriority="high"
+                decoding="async"
                 className="h-[280px] w-full object-cover lg:h-[320px]"
               />
             </div>
@@ -160,6 +215,52 @@ export default async function ServicePage({ params }: PageProps) {
               </div>
             ))}
           </div>
+
+          {/* Други услуги — вътрешни връзки между страниците на услугите */}
+          {otherServices.length > 0 && (
+            <div className="mt-[56px]">
+              <p className="text-[12px] leading-[14px] tracking-[2px] text-plum">
+                ОЩЕ УСЛУГИ
+              </p>
+              <div className="mt-[10px] flex flex-wrap items-end justify-between gap-x-[24px] gap-y-[8px]">
+                <h2 className="text-[26px] font-bold italic leading-[30px] tracking-[-0.34px] text-ink lg:text-[30px]">
+                  Разгледай и други услуги
+                </h2>
+                <a
+                  href="/uslugi"
+                  className="fx-link text-[15px] leading-[22px] text-plum"
+                >
+                  Всички услуги →
+                </a>
+              </div>
+              <ul className="mt-[24px] grid grid-cols-2 gap-[12px] sm:grid-cols-3 lg:grid-cols-5">
+                {otherServices.map((other) => (
+                  <li key={other.slug} className="fx-card rounded-[14px]">
+                    <a
+                      href={`/uslugi/${other.slug}`}
+                      className="block h-full overflow-hidden rounded-[14px] border border-line bg-white shadow-[0px_6px_18px_0px_rgba(102,77,146,0.06)]"
+                    >
+                      <div className="fx-card-media h-[110px] w-full overflow-hidden sm:h-[130px]">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          alt={other.title}
+                          src={other.image}
+                          width={814}
+                          height={543}
+                          loading="lazy"
+                          decoding="async"
+                          className="size-full object-cover"
+                        />
+                      </div>
+                      <h3 className="fx-card-title px-[12px] py-[10px] text-[15px] font-bold italic leading-[19px] text-ink">
+                        {other.title}
+                      </h3>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <div
             className="mt-[40px] overflow-hidden rounded-[22px] px-[20px] py-[36px] text-center sm:px-[32px] sm:py-[40px]"

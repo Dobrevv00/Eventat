@@ -2,13 +2,16 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getFooterContent, getHeaderContent } from "@/lib/content";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumbJsonLd, jsonLdGraph, pageMetadata } from "@/lib/seo";
 import CookieSettingsButton from "@/components/CookieSettingsButton";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Политика за бисквитки — EventAT",
   description:
     "Какви бисквитки използва EventAT, за какво служат и как да управляваш своя избор.",
-};
+  path: "/politika-biskvitki",
+});
 
 const LAST_UPDATED = "20 август 2026 г.";
 
@@ -74,6 +77,14 @@ export default async function PolitikaBiskvitkiPage() {
 
   return (
     <main className="flex min-h-screen flex-col overflow-x-clip bg-white">
+      <JsonLd
+        data={jsonLdGraph(
+          breadcrumbJsonLd([
+            { name: "Начало", path: "/" },
+            { name: "Политика за бисквитки", path: "/politika-biskvitki" },
+          ]),
+        )}
+      />
       <Header content={header} />
 
       <section

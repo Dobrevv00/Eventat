@@ -1,5 +1,7 @@
 import type { Access, GlobalConfig } from "payload";
 
+import { revalidateGlobalAfterChange } from "../lib/revalidate";
+
 const authenticated: Access = ({ req }) => Boolean(req.user);
 
 /**
@@ -13,6 +15,9 @@ export const ServicesPage: GlobalConfig = {
     group: "Страници",
     description:
       "Текстовете, които се повтарят на всяка страница на услуга. Конкретната услуга се редактира в „Услуги“.",
+  },
+  hooks: {
+    afterChange: [revalidateGlobalAfterChange],
   },
   access: {
     read: () => true,

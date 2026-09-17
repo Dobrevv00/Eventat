@@ -2,12 +2,15 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getFooterContent, getHeaderContent } from "@/lib/content";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumbJsonLd, jsonLdGraph, pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Общи условия — EventAT",
   description:
     "Общи условия за ползване на платформата EventAT, оперирана от „ЧЕРИ ЕСТЕЙТ“ ЕООД.",
-};
+  path: "/obshti-usloviya",
+});
 
 const LAST_UPDATED = "20 август 2026 г.";
 
@@ -49,6 +52,14 @@ export default async function ObshtiUsloviyaPage() {
 
   return (
     <main className="flex min-h-screen flex-col overflow-x-clip bg-white">
+      <JsonLd
+        data={jsonLdGraph(
+          breadcrumbJsonLd([
+            { name: "Начало", path: "/" },
+            { name: "Общи условия", path: "/obshti-usloviya" },
+          ]),
+        )}
+      />
       <Header content={header} />
 
       <section

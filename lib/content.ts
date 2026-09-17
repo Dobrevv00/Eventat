@@ -223,6 +223,8 @@ export type ServiceContent = {
   ctaSubtitle?: string;
   ctaButtonLabel?: string;
   ctaButtonHref?: string;
+  /** Последна промяна в CMS — за sitemap.xml. */
+  updatedAt?: string;
 };
 
 const fromStatic = (s: StaticService): ServiceContent => ({
@@ -286,6 +288,7 @@ export const getServices = cache(async (): Promise<ServiceContent[]> => {
           typeof d.ctaButtonLabel === "string" ? d.ctaButtonLabel : undefined,
         ctaButtonHref:
           typeof d.ctaButtonHref === "string" ? d.ctaButtonHref : undefined,
+        updatedAt: typeof d.updatedAt === "string" ? d.updatedAt : undefined,
       };
     });
   } catch {

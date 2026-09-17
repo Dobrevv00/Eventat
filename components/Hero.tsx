@@ -20,6 +20,10 @@ export default function Hero({ content }: { content?: HomeContent["hero"] }) {
         <img
           alt=""
           src={backgroundImage}
+          width={1940}
+          height={1060}
+          fetchPriority="high"
+          decoding="async"
           className="absolute left-0 top-0 size-full max-w-none object-cover lg:left-[-13.2%] lg:top-[-1.4%] lg:h-[124%] lg:w-[126.4%]"
         />
       </div>
@@ -90,9 +94,9 @@ export default function Hero({ content }: { content?: HomeContent["hero"] }) {
           />
         </div>
 
-        <div className="mt-[36px] flex flex-col items-center gap-[4.7px] text-center text-[28px] font-bold italic leading-[32px] tracking-[-0.6px] lg:mt-[44px] lg:whitespace-nowrap lg:text-[36.18px] lg:leading-[32.7px] lg:tracking-[-0.91px]">
-          <p className="text-ink">{c.headingLine1}</p>
-          <p>
+        <h1 className="mt-[36px] flex flex-col items-center gap-[4.7px] text-center text-[28px] font-bold italic leading-[32px] tracking-[-0.6px] lg:mt-[44px] lg:whitespace-nowrap lg:text-[36.18px] lg:leading-[32.7px] lg:tracking-[-0.91px]">
+          <span className="block text-ink">{c.headingLine1}</span>
+          <span className="block">
             <span
               className="bg-clip-text text-transparent"
               style={{
@@ -103,8 +107,8 @@ export default function Hero({ content }: { content?: HomeContent["hero"] }) {
               {c.headingHighlight}{" "}
             </span>
             <span className="text-ink">{c.headingSuffix}</span>
-          </p>
-        </div>
+          </span>
+        </h1>
 
         <p className="mt-[12px] w-full max-w-[798px] text-center text-[17px] leading-[24px] text-muted lg:text-[20px] lg:leading-[27.9px]">
           {c.subtitle}

@@ -1,5 +1,7 @@
 import type { Access, GlobalConfig } from "payload";
 
+import { revalidateGlobalAfterChange } from "../lib/revalidate";
+
 const authenticated: Access = ({ req }) => Boolean(req.user);
 
 export const Footer: GlobalConfig = {
@@ -9,6 +11,9 @@ export const Footer: GlobalConfig = {
     group: "Настройки",
     description:
       "Долната лента на сайта. Логото се взема от „Хедър“, а контактните данни — от „Настройки на сайта“.",
+  },
+  hooks: {
+    afterChange: [revalidateGlobalAfterChange],
   },
   access: {
     read: () => true,

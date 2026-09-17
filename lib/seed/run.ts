@@ -8,6 +8,7 @@ import {
   FOOTER_DEFAULTS,
   HEADER_DEFAULTS,
   HOME_DEFAULTS,
+  LEGACY_SEO_DEFAULTS,
   SERVICES_PAGE_DEFAULTS,
   SITE_SETTINGS_DEFAULTS,
 } from "../defaults";
@@ -62,7 +63,10 @@ async function ensureMedia(
  * Версия на началното съдържание. Увеличава се, когато се добавят НОВИ полета,
  * които трябва да получат стойност в вече засети Globals.
  */
-const SEED_VERSION = 3;
+const SEED_VERSION = 4;
+
+/** Seed-ът работи при старт, извън заявка — без прегенериране на страници. */
+const SEED_CONTEXT = { disableRevalidate: true };
 
 type GlobalSlug =
   | "site-settings"
@@ -71,6 +75,17 @@ type GlobalSlug =
   | "home-page"
   | "services-page"
   | "contacts-page";
+
+/**
+ * Заменя стойност САМО ако в CMS още стои старият текст по подразбиране.
+ * Ако клиентът е написал свой текст, той остава непроменен.
+ */
+class ReplaceIfUnchanged {
+  constructor(
+    readonly from: string,
+    readonly to: string,
+  ) {}
+}
 
 /**
  * Точкови допълнения след версия 2: само ключовете, добавени в съответната
@@ -87,6 +102,26 @@ const VERSION_BACKFILLS: Record<
         socialLabel: HOME_DEFAULTS.joinCta.socialLabel,
         socialPlaceholder: HOME_DEFAULTS.joinCta.socialPlaceholder,
       },
+    },
+  },
+  // SEO: по-информативни заглавие и описание на началната страница.
+  4: {
+    "site-settings": {
+      metaTitle: new ReplaceIfUnchanged(
+        LEGACY_SEO_DEFAULTS.metaTitle,
+        SITE_SETTINGS_DEFAULTS.metaTitle,
+      ),
+      metaDescription: new ReplaceIfUnchanged(
+        LEGACY_SEO_DEFAULTS.metaDescription,
+        SITE_SETTINGS_DEFAULTS.metaDescription,
+      ),
+    },
+    // „Всички услуги“ води към новата страница /uslugi.
+    "services-page": {
+      secondaryCtaHref: new ReplaceIfUnchanged(
+        LEGACY_SEO_DEFAULTS.servicesSecondaryCtaHref,
+        SERVICES_PAGE_DEFAULTS.secondaryCtaHref,
+      ),
     },
   },
 };
@@ -143,7 +178,11 @@ function withBackfill(
   const out: Record<string, unknown> = { ...base };
 
   for (const [key, fallback] of Object.entries(patch)) {
-    if (isPlainObject(fallback)) {
+    if (fallback instanceof ReplaceIfUnchanged) {
+      if (isEmpty(base[key]) || base[key] === fallback.from) {
+        out[key] = fallback.to;
+      }
+    } else if (isPlainObject(fallback)) {
       out[key] = withBackfill(base[key], fallback);
     } else if (isEmpty(base[key])) {
       out[key] = fallback;
@@ -167,7 +206,9 @@ function versionBackfill(
 
     for (const [key, value] of Object.entries(patch)) {
       const base = key in next ? next[key] : current[key];
-      if (isPlainObject(value)) {
+      if (value instanceof ReplaceIfUnchanged) {
+        if (isEmpty(base) || base === value.from) next[key] = value.to;
+      } else if (isPlainObject(value)) {
         next[key] = withBackfill(base, value);
       } else if (isEmpty(base)) {
         next[key] = value;
@@ -195,6 +236,7 @@ async function seedGlobal(
       slug,
       data: { ...data, seeded: true, seedVersion: SEED_VERSION },
       overrideAccess: true,
+      context: SEED_CONTEXT,
     });
     return "seeded";
   }
@@ -216,6 +258,7 @@ async function seedGlobal(
         seedVersion: SEED_VERSION,
       },
       overrideAccess: true,
+      context: SEED_CONTEXT,
     });
     return "backfilled";
   }
@@ -259,6 +302,7 @@ export async function runSeed(payload: Payload): Promise<void> {
         active: true,
       },
       overrideAccess: true,
+      context: SEED_CONTEXT,
     });
 
     createdServices++;
