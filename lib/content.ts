@@ -160,6 +160,11 @@ export const getHomeContent = cache(async () => {
         join.websitePlaceholder,
         d.joinCta.websitePlaceholder,
       ),
+      socialLabel: pick(join.socialLabel, d.joinCta.socialLabel),
+      socialPlaceholder: pick(
+        join.socialPlaceholder,
+        d.joinCta.socialPlaceholder,
+      ),
       optInLabel: pick(join.optInLabel, d.joinCta.optInLabel),
       submitLabel: pick(join.submitLabel, d.joinCta.submitLabel),
       formDisclaimer: pick(join.formDisclaimer, d.joinCta.formDisclaimer),

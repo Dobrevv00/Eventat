@@ -215,6 +215,7 @@ export default function JoinCta({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [website, setWebsite] = useState("");
+  const [socialProfile, setSocialProfile] = useState("");
   const [optIn, setOptIn] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -328,6 +329,7 @@ export default function JoinCta({
         name,
         email,
         website,
+        socialProfile,
         optIn,
         selections,
         customTexts,
@@ -546,18 +548,33 @@ export default function JoinCta({
             </div>
 
             {activeTab === "offer" && (
-              <label className="mt-[14px] block">
-                <span className="text-[13px] leading-[20.15px] text-muted">
-                  {c.websiteLabel}
-                </span>
-                <input
-                  type="url"
-                  value={website}
-                  onChange={(e) => setWebsite(e.target.value)}
-                  placeholder={c.websitePlaceholder}
-                  className={inputClasses(false)}
-                />
-              </label>
+              <>
+                <label className="mt-[14px] block">
+                  <span className="text-[13px] leading-[20.15px] text-muted">
+                    {c.websiteLabel}
+                  </span>
+                  <input
+                    type="url"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                    placeholder={c.websitePlaceholder}
+                    className={inputClasses(false)}
+                  />
+                </label>
+                <label className="mt-[14px] block">
+                  <span className="text-[13px] leading-[20.15px] text-muted">
+                    {c.socialLabel}
+                  </span>
+                  <input
+                    type="text"
+                    value={socialProfile}
+                    onChange={(e) => setSocialProfile(e.target.value)}
+                    placeholder={c.socialPlaceholder}
+                    maxLength={500}
+                    className={inputClasses(false)}
+                  />
+                </label>
+              </>
             )}
 
             {activeGroups.map((def) => (

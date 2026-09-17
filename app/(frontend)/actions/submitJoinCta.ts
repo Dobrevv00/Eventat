@@ -17,6 +17,7 @@ type JoinCtaInput = {
   name?: unknown;
   email?: unknown;
   website?: unknown;
+  socialProfile?: unknown;
   optIn?: unknown;
   selections?: unknown;
   customTexts?: unknown;
@@ -27,6 +28,7 @@ const NAME_MIN = 2;
 const NAME_MAX = 100;
 const EMAIL_MAX = 254;
 const WEBSITE_MAX = 500;
+const SOCIAL_PROFILE_MAX = 500;
 const CUSTOM_TEXT_MAX = 500;
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -118,10 +120,15 @@ export async function submitJoinCta(
     data.earlyAccessOptIn = input.optIn === true;
   } else {
     const website = asString(input.website).trim();
-    if (website.length > WEBSITE_MAX) {
+    const socialProfile = asString(input.socialProfile).trim();
+    if (
+      website.length > WEBSITE_MAX ||
+      socialProfile.length > SOCIAL_PROFILE_MAX
+    ) {
       return { ok: false, error: INVALID_ERROR };
     }
     if (website) data.website = website;
+    if (socialProfile) data.socialProfile = socialProfile;
   }
 
   // 3) Запис през Local API. overrideAccess: true, защото това е доверен

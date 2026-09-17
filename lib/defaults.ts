@@ -150,6 +150,8 @@ export const HOME_DEFAULTS = {
     emailPlaceholder: "ime@example.com",
     websiteLabel: "Уебсайт",
     websitePlaceholder: "https://",
+    socialLabel: "Социална мрежа",
+    socialPlaceholder: "Линк към Facebook, Instagram или TikTok",
     optInLabel:
       "Желая да получа ранен достъп до EventAT и специални предложения при старта.",
     submitLabel: "Запиши се в листата",

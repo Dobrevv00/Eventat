@@ -325,6 +325,10 @@ export interface ServiceProviderSubmission {
    */
   website?: string | null;
   /**
+   * Facebook, Instagram или TikTok профил. Полето не е задължително във формата.
+   */
+  socialProfile?: string | null;
+  /**
    * Избор от 1 до 5. Възможни отговори: DJ и музиканти · Народни танци и артисти · Фотография и видео · Фотобудки и интерактивни услуги · Украса и балони · Кетъринг и напитки · Локации · Друго (свободен текст)
    */
   offerServices?: string[] | null;
@@ -567,6 +571,7 @@ export interface ServiceProviderSubmissionsSelect<T extends boolean = true> {
   name?: T;
   email?: T;
   website?: T;
+  socialProfile?: T;
   offerServices?: T;
   offerServicesOther?: T;
   offerDiscovery?: T;
@@ -771,6 +776,8 @@ export interface HomePage {
     emailPlaceholder?: string | null;
     websiteLabel?: string | null;
     websitePlaceholder?: string | null;
+    socialLabel?: string | null;
+    socialPlaceholder?: string | null;
     optInLabel?: string | null;
     successTitle?: string | null;
     successText?: string | null;
@@ -990,6 +997,8 @@ export interface HomePageSelect<T extends boolean = true> {
         emailPlaceholder?: T;
         websiteLabel?: T;
         websitePlaceholder?: T;
+        socialLabel?: T;
+        socialPlaceholder?: T;
         optInLabel?: T;
         successTitle?: T;
         successText?: T;
