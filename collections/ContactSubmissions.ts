@@ -18,7 +18,7 @@ export const ContactSubmissions: CollectionConfig = {
     useAsTitle: "email",
     defaultColumns: ["name", "email", "status", "createdAt"],
     components: {
-      listMenuItems: ["/components/admin/ExportSubmissions#ExportSubmissions"],
+      beforeListTable: ["/components/admin/ExportSubmissions#ExportSubmissions"],
     },
   },
   access: {

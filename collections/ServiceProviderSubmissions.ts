@@ -20,7 +20,7 @@ export const ServiceProviderSubmissions: CollectionConfig = {
     description:
       "Записванията от таб „Предлагам услуга“ в секцията за записване в листата.",
     components: {
-      listMenuItems: ["/components/admin/ExportSubmissions#ExportSubmissions"],
+      beforeListTable: ["/components/admin/ExportSubmissions#ExportSubmissions"],
     },
   },
   access: {

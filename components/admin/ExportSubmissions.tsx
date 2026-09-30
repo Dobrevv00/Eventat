@@ -1,10 +1,10 @@
 "use client";
 
 import { useMemo } from "react";
-import { PopupList, useConfig, useListQuery } from "@payloadcms/ui";
+import { Button, useConfig, useListQuery } from "@payloadcms/ui";
 
 /**
- * Бутон „Изтегли в Excel“ в менюто на списъка със запитвания.
+ * Бутон „Изтегли в Excel“ над списъка със запитвания.
  *
  * Подава текущия филтър, търсене и подредба на /api/exports/<колекция>,
  * за да се свали точно това, което е на екрана.
@@ -34,11 +34,24 @@ export function ExportSubmissions() {
   const total = data?.totalDocs;
 
   return (
-    <PopupList.Button onClick={() => window.location.assign(href)}>
-      {typeof total === "number"
-        ? `Изтегли в Excel (${total})`
-        : "Изтегли в Excel"}
-    </PopupList.Button>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "flex-end",
+        marginBottom: "var(--base)",
+      }}
+    >
+      <Button
+        buttonStyle="secondary"
+        size="small"
+        onClick={() => window.location.assign(href)}
+        tooltip="Сваля показаните в момента записи като .xlsx файл"
+      >
+        {typeof total === "number"
+          ? `⤓ Изтегли в Excel (${total})`
+          : "⤓ Изтегли в Excel"}
+      </Button>
+    </div>
   );
 }
 
