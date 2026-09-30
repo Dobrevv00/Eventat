@@ -19,6 +19,9 @@ export const EventPlanningSubmissions: CollectionConfig = {
     defaultColumns: ["name", "email", "status", "createdAt"],
     description:
       "Записванията от таб „Планирам събитие“ в секцията за записване в листата.",
+    components: {
+      listMenuItems: ["/components/admin/ExportSubmissions#ExportSubmissions"],
+    },
   },
   access: {
     create: authenticated,

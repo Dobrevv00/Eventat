@@ -19,6 +19,9 @@ export const ServiceProviderSubmissions: CollectionConfig = {
     defaultColumns: ["name", "email", "status", "createdAt"],
     description:
       "Записванията от таб „Предлагам услуга“ в секцията за записване в листата.",
+    components: {
+      listMenuItems: ["/components/admin/ExportSubmissions#ExportSubmissions"],
+    },
   },
   access: {
     create: authenticated,
